@@ -1,0 +1,69 @@
+# ============================================
+# BORROWER'S FORUM PLATFORM - .gitignore
+# ============================================
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+venv/
+env/
+.venv
+*.egg-info/
+
+# Environment & Secrets
+.env
+.env.local
+*.pem
+*.key
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+database/backups/*.db
+!database/.gitkeep
+
+# Data Files
+data/raw/*.csv
+data/raw/*.xlsx
+data/raw/*.json
+data/processed/*
+data/cache/*
+!data/**/.gitkeep
+
+# Logs
+logs/
+*.log
+!logs/.gitkeep
+
+# IDE
+.vscode/*
+!.vscode/settings.json
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Frontend
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Outputs
+outputs/*.pdf
+outputs/*.docx
+outputs/*.xlsx
+!outputs/**/.gitkeep
+
+# Temporary
+*.tmp
+*.swp
