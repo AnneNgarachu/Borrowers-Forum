@@ -7,7 +7,7 @@ Principle: Centralized configuration with environment-based settings
 Why: Makes deployment easy, keeps secrets out of code, follows 12-factor app principles
 """
 
-from pydantic_settings import BaseSettings  # Back to V2 syntax
+from pydantic import BaseSettings 
 from pydantic import validator, Field
 from typing import Optional, List
 from pathlib import Path
