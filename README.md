@@ -7,6 +7,7 @@ A production-ready API that helps debt-stressed countries make informed decision
 [![Live Status](https://img.shields.io/badge/Status-🟢%20LIVE-success)](https://borrowers-forum.onrender.com)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-green.svg)](https://fastapi.tiangolo.com)
+[![Tests](https://img.shields.io/badge/tests-38%20passed-brightgreen.svg)](tests/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
@@ -22,16 +23,24 @@ A production-ready API that helps debt-stressed countries make informed decision
 | **❤️ Health Check** | https://borrowers-forum.onrender.com/health |
 | **📘 ReDoc** | https://borrowers-forum.onrender.com/api/redoc |
 
+**⚠️ Note:** All data endpoints require API key authentication. Contact the administrator to obtain an API key.
+
 ---
 
 ## ✨ Features
+
+### 🔐 **API Key Authentication**
+Secure access control for all data endpoints:
+- **Permission Levels**: read, read_write, admin
+- **Rate Limiting**: 100 requests/minute (standard), 1000/minute (admin)
+- **Secure Storage**: SHA-256 hashed keys
 
 ### 🧮 **Debt Calculator**
 Convert abstract debt service payments into tangible opportunity costs:
 - **Healthcare**: How many doctors could be employed for 1 or 5 years?
 - **Education**: How many schools could be built?
 - **Climate**: What percentage of annual climate adaptation budget?
-- **Comparison**: Compare multiple debt scenarios side-by-side
+- **Live Data Mode**: Calculate with real-time World Bank data for 190+ countries
 
 ### 🔍 **Precedents Search**
 Find historical debt restructuring cases with AI-powered similarity matching:
@@ -40,9 +49,15 @@ Find historical debt restructuring cases with AI-powered similarity matching:
 - **Statistics Dashboard**: Aggregated insights by creditor type, treatment type, climate clauses
 - **Climate Tracking**: Identify cases with climate adaptation clauses
 
+### 🌍 **Live World Bank Data**
+Real-time economic data integration:
+- **190+ Countries**: Any country with World Bank data
+- **Live Indicators**: GDP, population, external debt, debt service, government revenue
+- **Automatic Caching**: 1-hour TTL for performance
+
 ### 🌍 **Country Data**
 - Comprehensive country profiles with economic and climate indicators
-- 5 countries currently supported: Ghana, Kenya, Zambia, Pakistan, Bangladesh
+- 5 countries with detailed data: Ghana, Kenya, Zambia, Pakistan, Bangladesh
 - Climate vulnerability scoring
 
 ---
@@ -54,14 +69,15 @@ Find historical debt restructuring cases with AI-powered similarity matching:
 The API is already deployed and ready to use:
 
 ```bash
-# Test the API
+# Test the API (public endpoint)
 curl https://borrowers-forum.onrender.com
 
-# View all countries
-curl https://borrowers-forum.onrender.com/api/v1/countries
-
-# Check health status
+# Check health status (public endpoint)
 curl https://borrowers-forum.onrender.com/health
+
+# Access protected endpoints (requires API key)
+curl -H "X-API-Key: your_api_key_here" \
+  https://borrowers-forum.onrender.com/api/v1/countries
 ```
 
 **Interactive Documentation:** https://borrowers-forum.onrender.com/api/docs
@@ -95,6 +111,7 @@ pip install -r requirements.txt
 # Set up environment variables
 # Create .env file with your database credentials
 echo "DATABASE_URL=postgresql://..." > .env
+echo "BOOTSTRAP_SECRET=your_secret_here" >> .env
 
 # Run the server
 uvicorn src.api.main:app --reload
@@ -108,36 +125,52 @@ uvicorn src.api.main:app --reload
 
 ---
 
-## 📊 API Endpoints
+## 📊 API Endpoints (19 Total)
 
-### **Root & Health** (2 endpoints)
+### **Public Endpoints** (2)
 ```
 GET    /                              # API information
 GET    /health                        # Health check with database status
 ```
 
-### **Countries** (3 endpoints)
+### **Countries** (3) - 🔐 Protected
 ```
 GET    /api/v1/countries              # List all countries
 POST   /api/v1/countries              # Create new country
 GET    /api/v1/countries/{code}       # Get specific country by ISO code
 ```
 
-### **Debt Calculator** (3 endpoints)
+### **Debt Calculator** (4) - 🔐 Protected
 ```
 POST   /api/v1/debt/calculate         # Calculate opportunity costs
+POST   /api/v1/debt/calculate-live    # Calculate with live World Bank data
 POST   /api/v1/debt/compare           # Compare multiple scenarios
 GET    /api/v1/debt/info              # Get calculator methodology
 ```
 
-### **Precedents Search** (3 endpoints)
+### **Precedents Search** (3) - 🔐 Protected
 ```
 GET    /api/v1/precedents             # Search with filters
 GET    /api/v1/precedents/similar     # AI similarity matching
 GET    /api/v1/precedents/stats       # Get statistics
 ```
 
-**Total: 11 endpoints**
+### **Live Data** (3) - 🔐 Protected
+```
+GET    /api/v1/live/economic/{code}   # Live economic data from World Bank
+GET    /api/v1/live/debt/{code}       # Live debt data for calculator
+GET    /api/v1/live/countries         # List supported countries
+```
+
+### **Admin** (6) - 🔐 Admin Only
+```
+POST   /api/v1/admin/keys/bootstrap   # Create first admin key (one-time)
+POST   /api/v1/admin/keys             # Generate new API key
+GET    /api/v1/admin/keys             # List all API keys
+GET    /api/v1/admin/keys/{key_id}    # Get key details
+DELETE /api/v1/admin/keys/{key_id}    # Deactivate key
+POST   /api/v1/admin/keys/{key_id}/reactivate  # Reactivate key
+```
 
 ---
 
@@ -149,6 +182,7 @@ GET    /api/v1/precedents/stats       # Get statistics
 ```bash
 curl -X POST "https://borrowers-forum.onrender.com/api/v1/debt/calculate" \
   -H "Content-Type: application/json" \
+  -H "X-API-Key: your_api_key_here" \
   -d '{
     "country_code": "GHA",
     "year": 2023,
@@ -194,7 +228,8 @@ curl -X POST "https://borrowers-forum.onrender.com/api/v1/debt/calculate" \
 
 **Request:**
 ```bash
-curl "https://borrowers-forum.onrender.com/api/v1/precedents/similar?country_code=GHA&debt_amount_millions=2000"
+curl -H "X-API-Key: your_api_key_here" \
+  "https://borrowers-forum.onrender.com/api/v1/precedents/similar?country_code=GHA&debt_amount_millions=2000"
 ```
 
 **Response:**
@@ -233,6 +268,32 @@ curl "https://borrowers-forum.onrender.com/api/v1/precedents/similar?country_cod
 
 ---
 
+## 🧪 Automated Testing
+
+Run the full test suite:
+
+```bash
+# Activate virtual environment first
+.\venv\Scripts\Activate.ps1  # Windows
+source venv/bin/activate      # Mac/Linux
+
+# Run all tests
+pytest tests/ -v
+```
+
+**Test Coverage:**
+
+| Test File | Tests | Coverage |
+|-----------|-------|----------|
+| `test_health.py` | 4 | Health & root endpoints |
+| `test_countries.py` | 6 | Countries API & auth |
+| `test_debt.py` | 10 | Debt calculator & validation |
+| `test_precedents.py` | 9 | Precedents search & filters |
+| `test_auth.py` | 9 | API key authentication |
+| **Total** | **38** | ✅ All passing |
+
+---
+
 ## 🏗️ Architecture
 
 ```
@@ -240,7 +301,15 @@ curl "https://borrowers-forum.onrender.com/api/v1/precedents/similar?country_cod
 │           FastAPI Application               │
 │  ┌───────────────────────────────────────┐  │
 │  │         API Routers                   │  │
-│  │  - Countries  - Debt  - Precedents   │  │
+│  │  Countries | Debt | Precedents        │  │
+│  │  Live Data | Admin                    │  │
+│  └───────────────────────────────────────┘  │
+│                    ↓                         │
+│  ┌───────────────────────────────────────┐  │
+│  │      Authentication Layer             │  │
+│  │  - API Key Validation                 │  │
+│  │  - Rate Limiting                      │  │
+│  │  - Permission Checks                  │  │
 │  └───────────────────────────────────────┘  │
 │                    ↓                         │
 │  ┌───────────────────────────────────────┐  │
@@ -248,6 +317,7 @@ curl "https://borrowers-forum.onrender.com/api/v1/precedents/similar?country_cod
 │  │  - Business Logic                     │  │
 │  │  - Calculations                       │  │
 │  │  - AI Similarity Matching             │  │
+│  │  - External API Clients               │  │
 │  └───────────────────────────────────────┘  │
 │                    ↓                         │
 │  ┌───────────────────────────────────────┐  │
@@ -256,11 +326,11 @@ curl "https://borrowers-forum.onrender.com/api/v1/precedents/similar?country_cod
 │  │  - Session Management                 │  │
 │  └───────────────────────────────────────┘  │
 └─────────────────────────────────────────────┘
-                     ↓
-         ┌─────────────────────┐
-         │  Supabase PostgreSQL │
-         │   (Cloud Database)   │
-         └─────────────────────┘
+          ↓                    ↓
+┌─────────────────┐  ┌─────────────────────┐
+│ Supabase        │  │ World Bank API      │
+│ PostgreSQL      │  │ (Live Data)         │
+└─────────────────┘  └─────────────────────┘
 ```
 
 **Key Design Principles:**
@@ -269,6 +339,7 @@ curl "https://borrowers-forum.onrender.com/api/v1/precedents/similar?country_cod
 - ✅ Pydantic validation for type safety
 - ✅ Comprehensive error handling
 - ✅ Auto-generated OpenAPI documentation
+- ✅ API key authentication with rate limiting
 
 ---
 
@@ -284,6 +355,8 @@ curl "https://borrowers-forum.onrender.com/api/v1/precedents/similar?country_cod
 | **Supabase** | Cloud | Database hosting |
 | **Render** | Cloud | Application hosting |
 | **Uvicorn** | 0.24.0 | ASGI server |
+| **pytest** | 9.0+ | Testing framework |
+| **httpx** | 0.27.0 | HTTP client for tests |
 
 ---
 
@@ -295,10 +368,13 @@ Borrowers-Forum/
 │   ├── api/
 │   │   ├── main.py                    # FastAPI application
 │   │   ├── dependencies.py            # Dependency injection
+│   │   ├── auth.py                    # Authentication & rate limiting
 │   │   └── routers/
 │   │       ├── countries.py           # Countries endpoints
 │   │       ├── debt.py                # Debt calculator endpoints
-│   │       └── precedents.py          # Precedents search endpoints
+│   │       ├── precedents.py          # Precedents search endpoints
+│   │       ├── live_data.py           # Live World Bank data endpoints
+│   │       └── admin.py               # Admin key management
 │   ├── config/
 │   │   └── settings.py                # Configuration management
 │   ├── models/
@@ -306,10 +382,21 @@ Borrowers-Forum/
 │   ├── services/
 │   │   ├── database.py                # Database connection
 │   │   ├── debt_calculator.py         # Debt calculation logic
-│   │   └── precedent_search.py        # Precedents search logic
+│   │   ├── precedent_search.py        # Precedents search logic
+│   │   ├── auth_service.py            # API key management
+│   │   └── external_data.py           # World Bank API client
 │   └── utils/
 │       ├── env_validator.py           # Environment validation
-│       └── add_test_data.py           # Test data scripts
+│       ├── add_test_data.py           # Test data scripts
+│       └── add_api_keys_table.py      # API keys table setup
+├── tests/
+│   ├── __init__.py
+│   ├── conftest.py                    # Test fixtures
+│   ├── test_health.py                 # Health endpoint tests
+│   ├── test_countries.py              # Countries API tests
+│   ├── test_debt.py                   # Debt calculator tests
+│   ├── test_precedents.py             # Precedents search tests
+│   └── test_auth.py                   # Authentication tests
 ├── docs/
 │   ├── ARCHITECTURE.md                # Architecture overview
 │   ├── CHAT_HANDOFF.md                # Development handoff
@@ -335,6 +422,9 @@ Time-series debt service and development spending data.
 ### **Precedents** (5 records)
 Historical debt restructuring cases with climate considerations.
 
+### **APIKeys** (1+ records)
+API key storage with permissions and rate limits.
+
 ---
 
 ## 🤖 AI Similarity Matching
@@ -356,13 +446,13 @@ The precedents search uses an intelligent scoring algorithm (0-100) based on:
 - [x] **Phase 1**: Foundation & Setup ✅
 - [x] **Phase 2**: Database & Countries API ✅
 - [x] **Phase 3**: Debt Calculator & Precedents Search ✅
+- [x] **Phase 4**: Live World Bank Data Integration ✅
+- [x] **Phase 5**: Testing (38 pytest tests) ✅
 - [x] **Phase 6**: Deployment to Render ✅
-- [ ] **Phase 4**: Real Data Integration (IMF, World Bank APIs)
-- [ ] **Phase 5**: Testing & Documentation
-- [ ] **Phase 7**: Security & Authentication
-- [ ] **Phase 8**: Frontend Dashboard (Optional)
+- [x] **Phase 7**: Security & Authentication ✅
+- [ ] **Phase 8**: Frontend Dashboard
 
-**Current Status:** 🟢 LIVE - Production-ready API with test data
+**Current Status:** 🟢 LIVE - Production-ready API with authentication and tests
 
 ---
 
@@ -382,6 +472,7 @@ The precedents search uses an intelligent scoring algorithm (0-100) based on:
 |----------|-------------|
 | `PYTHON_VERSION` | `3.11.10` (Critical for Pydantic V1 compatibility) |
 | `DATABASE_URL` | PostgreSQL connection string |
+| `BOOTSTRAP_SECRET` | Secret for initial admin key creation |
 
 ### **Deploy Your Own**
 
@@ -403,17 +494,17 @@ This project requires **Python 3.11.x**. Python 3.13 is NOT compatible due to Py
 
 ## 🔒 Security
 
-Current security measures:
+**Implemented:**
+- ✅ API key authentication on all data endpoints
+- ✅ Rate limiting (100 req/min standard, 1000/min admin)
+- ✅ Permission levels (read, read_write, admin)
+- ✅ SHA-256 key hashing (secure storage)
+- ✅ Bootstrap secret in environment variable
 - ✅ No credentials in code (environment variables only)
 - ✅ Input validation on all endpoints (Pydantic models)
 - ✅ SQL injection prevention (SQLAlchemy ORM)
 - ✅ CORS configured properly
 - ✅ HTTPS enabled (automatic on Render)
-
-**Coming Soon:**
-- API key authentication
-- Rate limiting
-- Error monitoring (Sentry)
 
 ---
 
@@ -424,9 +515,10 @@ This is a UN-backed initiative. Contributions welcome!
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
 3. Make changes and add tests
-4. Commit changes (`git commit -m 'Add: AmazingFeature'`)
-5. Push to branch (`git push origin feature/AmazingFeature`)
-6. Open a Pull Request
+4. Run tests (`pytest tests/ -v`)
+5. Commit changes (`git commit -m 'Add: AmazingFeature'`)
+6. Push to branch (`git push origin feature/AmazingFeature`)
+7. Open a Pull Request
 
 ---
 
@@ -458,10 +550,12 @@ This project is licensed under the MIT License - see LICENSE file for details.
 |--------|-------|
 | **Version** | 1.0.0 |
 | **Status** | 🟢 LIVE |
-| **API Endpoints** | 11 |
-| **Database Tables** | 3 |
-| **Test Records** | 15 |
-| **Countries** | 5 |
+| **API Endpoints** | 19 |
+| **Automated Tests** | 38 |
+| **Database Tables** | 4 |
+| **Test Records** | 16 |
+| **Countries (stored)** | 5 |
+| **Countries (live)** | 190+ |
 
 **Last Updated:** December 1, 2025
 

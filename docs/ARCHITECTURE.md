@@ -1,7 +1,7 @@
 # 🏗️ Borrower's Forum Platform - Architecture
 
 **Last Updated**: December 1, 2025  
-**Version**: 1.0.0 (Phase 6 Complete - LIVE!)  
+**Version**: 2.0.0 (Phase 5 Complete - Testing & Security)  
 **Status**: 🟢 Production - Live at https://borrowers-forum.onrender.com
 
 ---
@@ -19,6 +19,8 @@ The Borrower's Forum Platform is a production-grade debt intelligence API that e
 | **Health Check** | https://borrowers-forum.onrender.com/health |
 | **ReDoc** | https://borrowers-forum.onrender.com/api/redoc |
 
+**⚠️ All data endpoints require API key authentication!**
+
 ### Current Capabilities
 
 1. **Debt Calculator** ✅ LIVE
@@ -26,6 +28,7 @@ The Borrower's Forum Platform is a production-grade debt intelligence API that e
    - Calculate opportunity costs (doctors, schools, climate projects)
    - Compare multiple debt scenarios
    - Provide economic context (debt-to-GDP ratios)
+   - **Live World Bank data** for 190+ countries
 
 2. **Precedents Search** ✅ LIVE
    - Search 5 historical debt restructuring cases
@@ -38,69 +41,124 @@ The Borrower's Forum Platform is a production-grade debt intelligence API that e
    - Climate vulnerability scoring
    - Population and GDP data
 
+4. **Live Data Integration** ✅ LIVE (Phase 4)
+   - Real-time World Bank API integration
+   - Live economic indicators (GDP, debt, population)
+   - 190+ countries supported
+   - In-memory caching (1-hour TTL)
+
+5. **API Key Authentication** ✅ LIVE (Phase 7)
+   - All data endpoints protected
+   - Rate limiting (100 req/min standard, 1000 admin)
+   - Permission levels: read, read_write, admin
+   - SHA-256 secure key hashing
+
+6. **Automated Testing** ✅ COMPLETE (Phase 5)
+   - 38 pytest tests
+   - Full endpoint coverage
+   - Authentication & validation testing
+
 ---
 
 ## 🏛️ Architecture Pattern: Clean Architecture
 
 ```
-┌─────────────────────────────────────────────────────┐
-│                  API Layer (FastAPI)                │
-│                                                     │
-│  ┌─────────────────────────────────────────────┐   │
-│  │  Routers (HTTP Endpoints)                   │   │
-│  │  - countries.py                             │   │
-│  │  - debt.py                                  │   │
-│  │  - precedents.py                            │   │
-│  └─────────────────────────────────────────────┘   │
-│                       ↓                             │
-│  ┌─────────────────────────────────────────────┐   │
-│  │  Dependencies (Dependency Injection)        │   │
-│  │  - Database session management              │   │
-│  └─────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────┐
-│              Service Layer (Business Logic)         │
-│                                                     │
-│  ┌─────────────────────────────────────────────┐   │
-│  │  DebtCalculatorService                      │   │
-│  │  - calculate_opportunity_cost()             │   │
-│  │  - compare_scenarios()                      │   │
-│  │  - _calculate_equivalents()                 │   │
-│  └─────────────────────────────────────────────┘   │
-│                                                     │
-│  ┌─────────────────────────────────────────────┐   │
-│  │  PrecedentSearchService                     │   │
-│  │  - search_precedents()                      │   │
-│  │  - find_similar_precedents()                │   │
-│  │  - _calculate_similarity_score()            │   │
-│  │  - get_precedent_statistics()               │   │
-│  └─────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────┘
-                       ↓
-┌─────────────────────────────────────────────────────┐
-│           Data Layer (Database & ORM)               │
-│                                                     │
-│  ┌─────────────────────────────────────────────┐   │
-│  │  SQLAlchemy Models                          │   │
-│  │  - Country                                  │   │
-│  │  - DebtData                                 │   │
-│  │  - Precedent                                │   │
-│  └─────────────────────────────────────────────┘   │
-│                                                     │
-│  ┌─────────────────────────────────────────────┐   │
-│  │  Database Service                           │   │
-│  │  - Session management                       │   │
-│  │  - Connection pooling                       │   │
-│  └─────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────┘
-                       ↓
+┌─────────────────────────────────────────────────────────────┐
+│                    API Layer (FastAPI)                       │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  Authentication (auth.py)                              │ │
+│  │  - API key validation                                  │ │
+│  │  - Rate limiting                                       │ │
+│  │  - Permission checking                                 │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                           ↓                                  │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  Routers (HTTP Endpoints)                              │ │
+│  │  - countries.py      (3 endpoints - protected)         │ │
+│  │  - debt.py           (4 endpoints - protected)         │ │
+│  │  - precedents.py     (3 endpoints - protected)         │ │
+│  │  - live_data.py      (3 endpoints - protected)         │ │
+│  │  - admin.py          (6 endpoints - admin only)        │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                           ↓                                  │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  Dependencies (Dependency Injection)                   │ │
+│  │  - Database session management                         │ │
+│  │  - API key injection                                   │ │
+│  └────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                           ↓
+┌─────────────────────────────────────────────────────────────┐
+│                Service Layer (Business Logic)                │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  DebtCalculatorService                                 │ │
+│  │  - calculate_opportunity_cost()                        │ │
+│  │  - compare_scenarios()                                 │ │
+│  │  - _calculate_equivalents()                            │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  PrecedentSearchService                                │ │
+│  │  - search_precedents()                                 │ │
+│  │  - find_similar_precedents()                           │ │
+│  │  - _calculate_similarity_score()                       │ │
+│  │  - get_precedent_statistics()                          │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  AuthService                                           │ │
+│  │  - generate_api_key()                                  │ │
+│  │  - verify_api_key()                                    │ │
+│  │  - hash_key() / verify_key_hash()                      │ │
+│  │  - create_key() / deactivate_key()                     │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  ExternalDataService                                   │ │
+│  │  - WorldBankClient                                     │ │
+│  │  - get_country_data()                                  │ │
+│  │  - get_debt_indicators()                               │ │
+│  │  - In-memory caching (1-hour TTL)                      │ │
+│  └────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                           ↓
+┌─────────────────────────────────────────────────────────────┐
+│                Data Layer (Database & ORM)                   │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  SQLAlchemy Models                                     │ │
+│  │  - Country                                             │ │
+│  │  - DebtData                                            │ │
+│  │  - Precedent                                           │ │
+│  │  - APIKey                                              │ │
+│  └────────────────────────────────────────────────────────┘ │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  Database Service                                      │ │
+│  │  - Session management                                  │ │
+│  │  - Connection pooling                                  │ │
+│  └────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                           ↓
+┌─────────────────────────────────────────────────────────────┐
+│                 External APIs                                │
+│  ┌────────────────────────────────────────────────────────┐ │
+│  │  World Bank API                                        │ │
+│  │  - GDP, Population, Debt indicators                    │ │
+│  │  - 190+ countries                                      │ │
+│  │  - Free, no authentication                             │ │
+│  └────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                           ↓
          ┌────────────────────────────┐
          │  Supabase PostgreSQL       │
          │  (Cloud Database)          │
          │  - countries (5 rows)      │
          │  - debt_data (5 rows)      │
          │  - precedents (5 rows)     │
+         │  - api_keys (1+ rows)      │
          └────────────────────────────┘
 ```
 
@@ -110,6 +168,7 @@ The Borrower's Forum Platform is a production-grade debt intelligence API that e
 ✅ **Testability**: Services can be tested independently  
 ✅ **Maintainability**: Changes in one layer don't affect others  
 ✅ **Scalability**: Easy to add new features or swap implementations  
+✅ **Security**: Authentication layer protects all routes
 
 ---
 
@@ -118,46 +177,60 @@ The Borrower's Forum Platform is a production-grade debt intelligence API that e
 ### Production Stack
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│                        INTERNET                          │
-└──────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                        INTERNET                               │
+└──────────────────────────────────────────────────────────────┘
                             ↓
-┌──────────────────────────────────────────────────────────┐
-│                    Render (Hosting)                      │
-│  ┌────────────────────────────────────────────────────┐  │
-│  │  Web Service: borrowers-forum                      │  │
-│  │  - Instance: Free Tier                             │  │
-│  │  - Region: Oregon (US West)                        │  │
-│  │  - Auto-Deploy: Enabled                            │  │
-│  │  - URL: borrowers-forum.onrender.com               │  │
-│  └────────────────────────────────────────────────────┘  │
-│                                                          │
-│  Environment Variables:                                  │
-│  - PYTHON_VERSION=3.11.10                               │
-│  - DATABASE_URL=postgresql://...                        │
-└──────────────────────────────────────────────────────────┘
+                    [API Key Required]
                             ↓
-┌──────────────────────────────────────────────────────────┐
-│                   Application Layer                      │
-│  ┌────────────────────────────────────────────────────┐  │
-│  │  FastAPI Application                               │  │
-│  │  - Python 3.11 (forced via PYTHON_VERSION)         │  │
-│  │  - Pydantic V1 (1.10.13)                           │  │
-│  │  - SQLAlchemy 2.0                                  │  │
-│  │  - Uvicorn ASGI Server                             │  │
-│  └────────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                    Render (Hosting)                           │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  Web Service: borrowers-forum                          │  │
+│  │  - Instance: Free Tier                                 │  │
+│  │  - Region: Oregon (US West)                            │  │
+│  │  - Auto-Deploy: Enabled                                │  │
+│  │  - URL: borrowers-forum.onrender.com                   │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                               │
+│  Environment Variables:                                       │
+│  - PYTHON_VERSION=3.11.10                                    │
+│  - DATABASE_URL=postgresql://...                             │
+│  - BOOTSTRAP_SECRET=...                                      │
+└──────────────────────────────────────────────────────────────┘
                             ↓
-┌──────────────────────────────────────────────────────────┐
-│                 Supabase (Database)                      │
-│  ┌────────────────────────────────────────────────────┐  │
-│  │  PostgreSQL 15                                     │  │
-│  │  - Connection: Session Pooler (IPv4)               │  │
-│  │  - Port: 6543                                      │  │
-│  │  - Region: US East 1                               │  │
-│  │  - Tables: countries, debt_data, precedents        │  │
-│  └────────────────────────────────────────────────────┘  │
-└──────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                   Application Layer                           │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  FastAPI Application                                   │  │
+│  │  - Python 3.11 (forced via PYTHON_VERSION)             │  │
+│  │  - Pydantic V1 (1.10.13)                               │  │
+│  │  - SQLAlchemy 2.0                                      │  │
+│  │  - Uvicorn ASGI Server                                 │  │
+│  │  - API Key Authentication                              │  │
+│  │  - Rate Limiting (in-memory)                           │  │
+│  └────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────┘
+                            ↓
+┌──────────────────────────────────────────────────────────────┐
+│                 Supabase (Database)                           │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  PostgreSQL 15                                         │  │
+│  │  - Connection: Session Pooler (IPv4)                   │  │
+│  │  - Port: 6543                                          │  │
+│  │  - Region: US East 1                                   │  │
+│  │  - Tables: countries, debt_data, precedents, api_keys  │  │
+│  └────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────┘
+                            ↓
+┌──────────────────────────────────────────────────────────────┐
+│                 World Bank API (External)                     │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │  - GDP, Population, Debt indicators                    │  │
+│  │  - 190+ countries                                      │  │
+│  │  - Cached for 1 hour                                   │  │
+│  └────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ### Deployment Configuration
@@ -177,6 +250,7 @@ The Borrower's Forum Platform is a production-grade debt intelligence API that e
 |----------|---------|----------|
 | `PYTHON_VERSION` | Forces Python 3.11 (Pydantic V1 compatibility) | ✅ YES |
 | `DATABASE_URL` | PostgreSQL connection string | ✅ YES |
+| `BOOTSTRAP_SECRET` | Initial admin key creation secret | ✅ YES |
 
 ---
 
@@ -192,6 +266,7 @@ This project applies enterprise frameworks from the project knowledge base:
 - Pagination structure (limit/offset)
 - Consistent response formatting
 - Error handling with appropriate HTTP status codes
+- API key authentication headers
 
 **Evidence:**
 ```python
@@ -200,6 +275,9 @@ GET /api/v1/precedents?limit=20&offset=0
 
 # POST endpoints for non-idempotent calculations
 POST /api/v1/debt/calculate
+
+# API key header requirement
+X-API-Key: bf_keyid_secret
 
 # Proper error handling
 raise HTTPException(
@@ -216,6 +294,7 @@ raise HTTPException(
 - Foreign key relationships with CASCADE deletes
 - Indexed fields for performance (country codes, years)
 - Data quality tracking fields
+- Secure credential storage (hashed API keys)
 
 **Evidence:**
 ```python
@@ -224,8 +303,10 @@ class DebtData(Base):
     country_id = Column(UUID(as_uuid=True), ForeignKey('countries.id', ondelete='CASCADE'))
     country = relationship("Country", back_populates="debt_data")
 
-# Data quality tracking
-data_quality_score = Column(Integer, nullable=True, comment="0-100")
+# Secure API key storage
+class APIKey(Base):
+    key_hash = Column(String(64), nullable=False)  # SHA-256 hash
+    is_active = Column(Boolean, default=True)
 ```
 
 ### **3. Framework Conflicts Resolution** ✅ APPLIED
@@ -239,6 +320,8 @@ data_quality_score = Column(Integer, nullable=True, comment="0-100")
 - Team size: Solo developer
 - **Conclusion:** Prioritize readable, maintainable code over premature optimization
 
+**Security Override:** Security ALWAYS wins for authentication, API keys, and data protection.
+
 ### **4. DevOps Infrastructure Framework** ✅ APPLIED
 
 **Applied in:**
@@ -247,49 +330,69 @@ data_quality_score = Column(Integer, nullable=True, comment="0-100")
 - Health check endpoint
 - Auto-deployment from Git
 - Separation of development/production configurations
+- Secrets management (bootstrap secret in env var)
+
+### **5. Testing Excellence Framework** ✅ APPLIED (Phase 5)
+
+**Applied in:**
+- pytest test suite with 38 tests
+- Shared fixtures (conftest.py)
+- Authentication mocking
+- Input validation testing
+- Endpoint existence verification
+- Test coverage across all endpoint categories
 
 ---
 
-## 🛠️ Technology Stack
+## 📁 Project Structure
 
-### **Backend Technologies**
-
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| **Python** | 3.11.10 | Programming language |
-| **FastAPI** | 0.104.1 | Web framework |
-| **SQLAlchemy** | 2.0.23 | ORM for database |
-| **Pydantic** | 1.10.13 | Data validation |
-| **Uvicorn** | 0.24.0 | ASGI server |
-| **PostgreSQL** | 15+ | Database |
-| **Supabase** | Cloud | Database hosting |
-| **Render** | Cloud | Application hosting |
-
-### **Why These Technologies?**
-
-**FastAPI:**
-- ✅ Auto-generated OpenAPI docs
-- ✅ Type safety with Pydantic
-- ✅ Async support for scalability
-- ✅ Best-in-class performance for Python
-
-**Pydantic V1 (not V2):**
-- ✅ Pure Python (no Rust compilation needed)
-- ✅ Compatible with Python 3.11
-- ✅ Works on free hosting tiers
-- ⚠️ V2 requires Rust compiler (fails on Render/Railway free tiers)
-
-**SQLAlchemy 2.0:**
-- ✅ Type-safe ORM
-- ✅ Migration support (Alembic)
-- ✅ Prevents SQL injection
-- ✅ Database-agnostic (can switch databases)
-
-**PostgreSQL:**
-- ✅ ACID compliance
-- ✅ JSON support for flexible data
-- ✅ Excellent performance
-- ✅ Free and open-source
+```
+Borrowers-Forum/
+├── src/
+│   ├── api/
+│   │   ├── main.py              # FastAPI application
+│   │   ├── dependencies.py      # DB session injection
+│   │   ├── auth.py              # Auth dependencies & rate limiter
+│   │   └── routers/
+│   │       ├── countries.py     # Countries endpoints (protected)
+│   │       ├── debt.py          # Debt calculator (protected)
+│   │       ├── precedents.py    # Precedents search (protected)
+│   │       ├── live_data.py     # Live World Bank data (protected)
+│   │       └── admin.py         # Admin key management
+│   ├── config/
+│   │   └── settings.py          # Configuration + BOOTSTRAP_SECRET
+│   ├── models/
+│   │   └── debt_data.py         # Database models (4 models)
+│   ├── services/
+│   │   ├── database.py          # Database service
+│   │   ├── debt_calculator.py   # Debt calc logic
+│   │   ├── precedent_search.py  # Search logic
+│   │   ├── auth_service.py      # API key service
+│   │   └── external_data.py     # World Bank API client
+│   └── utils/
+│       ├── env_validator.py     # Environment validation
+│       ├── add_test_data.py     # Countries test data
+│       ├── add_debt_test_data.py
+│       ├── add_precedent_test_data.py
+│       └── add_api_keys_table.py
+├── tests/
+│   ├── __init__.py
+│   ├── conftest.py              # Shared fixtures
+│   ├── test_health.py           # 4 tests
+│   ├── test_countries.py        # 6 tests
+│   ├── test_debt.py             # 10 tests
+│   ├── test_precedents.py       # 9 tests
+│   └── test_auth.py             # 9 tests
+├── docs/
+│   ├── ARCHITECTURE.md          # This file
+│   ├── CHAT_HANDOFF.md          # Development handoff
+│   └── DEPLOYMENT_GUIDE.md      # Deployment guide
+├── Procfile                     # Render start command
+├── runtime.txt                  # Python version
+├── requirements.txt             # Dependencies
+├── .env.example                 # Example environment
+└── README.md                    # Project documentation
+```
 
 ---
 
@@ -337,6 +440,23 @@ data_quality_score = Column(Integer, nullable=True, comment="0-100")
 │ npv_reduction   │
 │ climate_clause  │
 └─────────────────┘
+
+┌─────────────────┐
+│    APIKeys      │
+│─────────────────│
+│ id (PK)         │
+│ key_id (UNIQUE) │
+│ key_hash        │
+│ name            │
+│ owner           │
+│ permissions     │
+│ is_active       │
+│ rate_limit      │
+│ created_at      │
+│ last_used_at    │
+│ expires_at      │
+│ usage_count     │
+└─────────────────┘
 ```
 
 ### **Current Data**
@@ -346,6 +466,7 @@ data_quality_score = Column(Integer, nullable=True, comment="0-100")
 | **countries** | 5 | Ghana, Kenya, Zambia, Pakistan, Bangladesh |
 | **debt_data** | 5 | 2023 debt service and development costs |
 | **precedents** | 5 | Historical cases from 2017-2023 |
+| **api_keys** | 1+ | Admin key for platform access |
 
 ---
 
@@ -354,27 +475,99 @@ data_quality_score = Column(Integer, nullable=True, comment="0-100")
 ### **Endpoint Structure**
 
 ```
-/                           # Root - API info
-/health                     # Health check
+/                               # Root - API info (public)
+/health                         # Health check (public)
 
 /api/v1/
-├── /countries
-│   ├── GET  /              # List all countries
-│   ├── POST /              # Create country
-│   └── GET  /{code}        # Get country by code
+├── /countries                  [Protected - API Key Required]
+│   ├── GET  /                  # List all countries
+│   ├── POST /                  # Create country (write permission)
+│   └── GET  /{code}            # Get country by code
 │
-├── /debt
-│   ├── POST /calculate     # Calculate opportunity costs
-│   ├── POST /compare       # Compare scenarios
-│   └── GET  /info          # Calculator methodology
+├── /debt                       [Protected - API Key Required]
+│   ├── POST /calculate         # Calculate with stored data
+│   ├── POST /calculate-live    # Calculate with live World Bank data
+│   ├── POST /compare           # Compare scenarios
+│   └── GET  /info              # Calculator methodology
 │
-└── /precedents
-    ├── GET  /              # Search precedents (with filters)
-    ├── GET  /similar       # AI similarity matching
-    └── GET  /stats         # Statistics dashboard
+├── /precedents                 [Protected - API Key Required]
+│   ├── GET  /                  # Search precedents (with filters)
+│   ├── GET  /similar           # AI similarity matching
+│   └── GET  /stats             # Statistics dashboard
+│
+├── /live                       [Protected - API Key Required]
+│   ├── GET  /economic/{code}   # Live economic data
+│   ├── GET  /debt/{code}       # Live debt data
+│   └── GET  /countries         # Supported countries
+│
+└── /admin                      [Protected - Admin Permission]
+    ├── POST /keys/bootstrap    # Create first admin key
+    ├── POST /keys              # Generate new key
+    ├── GET  /keys              # List all keys
+    ├── GET  /keys/{key_id}     # Get key details
+    ├── DELETE /keys/{key_id}   # Deactivate key
+    └── POST /keys/{key_id}/reactivate  # Reactivate key
 ```
 
-### **Total Endpoints: 11** (2 root + 9 API)
+### **Total Endpoints: 19** (2 public + 17 protected)
+
+| Category | Count | Protection |
+|----------|-------|------------|
+| Public | 2 | None |
+| Countries | 3 | API Key |
+| Debt | 4 | API Key |
+| Precedents | 3 | API Key |
+| Live Data | 3 | API Key |
+| Admin | 6 | Admin Key |
+
+---
+
+## 🔒 Security Architecture
+
+### **Authentication Flow**
+
+```
+┌──────────────┐     ┌──────────────┐     ┌──────────────┐
+│   Client     │────▶│   API Key    │────▶│   Endpoint   │
+│              │     │  Validation  │     │              │
+└──────────────┘     └──────────────┘     └──────────────┘
+                            │
+                            ▼
+                    ┌──────────────┐
+                    │  Rate Limit  │
+                    │    Check     │
+                    └──────────────┘
+                            │
+                            ▼
+                    ┌──────────────┐
+                    │  Permission  │
+                    │    Check     │
+                    └──────────────┘
+```
+
+### **Security Measures** ✅ ALL IMPLEMENTED
+
+| Measure | Status | Implementation |
+|---------|--------|----------------|
+| **API Key Authentication** | ✅ Done | X-API-Key header required |
+| **Rate Limiting** | ✅ Done | 100/min standard, 1000/min admin |
+| **Key Hashing** | ✅ Done | SHA-256 (secrets never stored) |
+| **Timing-Safe Comparison** | ✅ Done | Prevents timing attacks |
+| **Environment Variables** | ✅ Done | All secrets in env vars |
+| **Input Validation** | ✅ Done | Pydantic models |
+| **SQL Injection Prevention** | ✅ Done | SQLAlchemy ORM |
+| **CORS Configuration** | ✅ Done | Allowed origins configured |
+| **HTTPS** | ✅ Done | Automatic on Render |
+| **Private Repository** | ✅ Done | Code not public |
+| **Bootstrap Secret** | ✅ Done | In environment variable |
+
+### **Permission Levels**
+
+| Level | Capabilities |
+|-------|--------------|
+| `read` | GET endpoints only |
+| `read_write` | GET + POST endpoints |
+| `admin` | Full access + key management |
 
 ---
 
@@ -403,24 +596,42 @@ data_quality_score = Column(Integer, nullable=True, comment="0-100")
 
 ---
 
-## 🔒 Security Architecture
+## 🧪 Testing Architecture
 
-### **Current Security Measures**
+### **Test Suite Structure** ✅ COMPLETE (Phase 5)
 
-✅ **Environment Variables**: All secrets in environment variables (not in Git)  
-✅ **Input Validation**: Pydantic models validate all inputs  
-✅ **SQL Injection Prevention**: SQLAlchemy ORM (no raw SQL)  
-✅ **CORS Configuration**: Configured allowed origins  
-✅ **HTTPS**: Automatic on Render  
-✅ **Private Repository**: Code not publicly accessible  
+```
+tests/
+├── conftest.py          # Shared fixtures
+│   ├── client()         # FastAPI TestClient
+│   ├── mock_country()   # Mock data fixtures
+│   ├── auth_headers()   # Test API key headers
+│   └── mock_auth()      # Auth bypass for testing
+│
+├── test_health.py       # 4 tests - Public endpoints
+├── test_countries.py    # 6 tests - Countries API
+├── test_debt.py         # 10 tests - Debt calculator
+├── test_precedents.py   # 9 tests - Precedents search
+└── test_auth.py         # 9 tests - Authentication
+```
 
-### **Planned Security (Phase 7)**
+### **Test Coverage**
 
-- [ ] Authentication (OAuth 2.0 / JWT tokens)
-- [ ] Rate limiting (100 requests/hour per IP)
-- [ ] API key management
-- [ ] Request logging
-- [ ] Error monitoring (Sentry)
+| Category | Tests | Coverage |
+|----------|-------|----------|
+| Health/Root | 4 | Public endpoints |
+| Countries | 6 | Auth + validation |
+| Debt Calculator | 10 | Auth + input validation |
+| Precedents | 9 | Auth + query params |
+| Authentication | 9 | Key validation + errors |
+| **Total** | **38** | ✅ All passing |
+
+### **Running Tests**
+
+```powershell
+.\venv\Scripts\Activate.ps1
+pytest tests/ -v
+```
 
 ---
 
@@ -429,9 +640,9 @@ data_quality_score = Column(Integer, nullable=True, comment="0-100")
 ### **Current Scale**
 
 - **Expected Load**: < 1,000 users
-- **Data Size**: 15 database records
+- **Data Size**: 16 database records + 190+ live countries
 - **Response Time**: < 100ms for calculations
-- **Architecture**: Monolithic API
+- **Architecture**: Monolithic API with external API integration
 
 ### **Free Tier Limitations**
 
@@ -446,23 +657,7 @@ data_quality_score = Column(Integer, nullable=True, comment="0-100")
 
 1. **Phase 1 (Current)**: Free tier, handles ~1,000 users
 2. **Phase 2 (Growth)**: Paid tier ($7/month), no spin down
-3. **Phase 3 (Scale)**: Horizontal scaling, Redis cache
-
----
-
-## 🧪 Testing Strategy
-
-### **Current Testing**
-
-- ✅ Swagger UI interactive testing
-- ✅ Manual endpoint validation
-- ✅ Health check monitoring
-
-### **Planned Testing (Phase 5)**
-
-- Unit tests for services
-- Integration tests for endpoints
-- 80%+ code coverage target
+3. **Phase 3 (Scale)**: Horizontal scaling, Redis cache, persistent rate limiting
 
 ---
 
@@ -483,13 +678,16 @@ pip install -r requirements.txt
 
 # Set up .env file
 cp .env.example .env
-# Edit .env with your DATABASE_URL
+# Edit .env with your DATABASE_URL and BOOTSTRAP_SECRET
 
 # Run locally
 uvicorn src.api.main:app --reload
 
 # Open Swagger UI
 http://localhost:8000/api/docs
+
+# Run tests
+pytest tests/ -v
 ```
 
 ### **Deploy Changes**
@@ -506,13 +704,16 @@ git push origin main
 **Add new endpoint:**
 1. Create service method in `src/services/`
 2. Add router endpoint in `src/api/routers/`
-3. Test in Swagger UI
-4. Commit and push (auto-deploys)
+3. Add authentication dependency if needed
+4. Write tests in `tests/`
+5. Test in Swagger UI
+6. Commit and push (auto-deploys)
 
 **Add database field:**
 1. Update model in `src/models/debt_data.py`
 2. Recreate tables or use Alembic migration
 3. Update test data scripts
+4. Update tests
 
 ---
 
@@ -527,6 +728,10 @@ git push origin main
 | Render over Railway | Better build resources, successful deployment | Dec 2025 |
 | Service layer pattern | Testability, reusability, separation of concerns | Nov 2025 |
 | UUID primary keys | Distributed system support, no collisions | Nov 2025 |
+| API key over OAuth | Simpler for API access, suitable for MVP | Dec 2025 |
+| SHA-256 key hashing | Industry standard, secure storage | Dec 2025 |
+| In-memory rate limiting | Simple, sufficient for current scale | Dec 2025 |
+| httpx 0.27.0 pinned | Newer versions break FastAPI TestClient | Dec 2025 |
 
 ---
 
@@ -538,6 +743,23 @@ git push origin main
 | `CHAT_HANDOFF.md` | Development continuation guide |
 | `DEPLOYMENT_GUIDE.md` | Deployment configuration and troubleshooting |
 | `/api/docs` | Auto-generated Swagger UI |
+
+---
+
+## 📊 Project Statistics
+
+| Metric | Value |
+|--------|-------|
+| **Total API Endpoints** | 19 |
+| **Automated Tests** | 38 |
+| **Database Tables** | 4 |
+| **Database Records** | 16 |
+| **Countries (stored)** | 5 |
+| **Countries (live)** | 190+ |
+| **Lines of Code** | ~5,000+ |
+| **Services** | 5 |
+| **Routers** | 5 |
+| **Models** | 4 |
 
 ---
 

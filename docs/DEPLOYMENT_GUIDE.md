@@ -21,6 +21,8 @@ The Borrower's Forum Platform is deployed on **Render** (free tier) and connecte
 | **ReDoc** | https://borrowers-forum.onrender.com/api/redoc |
 | **OpenAPI JSON** | https://borrowers-forum.onrender.com/api/openapi.json |
 
+**Note:** All data endpoints require API key authentication via the `X-API-Key` header.
+
 ---
 
 ## ⚙️ Render Configuration
@@ -49,10 +51,11 @@ The Borrower's Forum Platform is deployed on **Render** (free tier) and connecte
 |----------|-------------|---------|
 | `PYTHON_VERSION` | **CRITICAL** - Forces Python 3.11 | `3.11.10` |
 | `DATABASE_URL` | Supabase PostgreSQL connection string | `postgresql://postgres.xxx:password@aws-0-us-east-1.pooler.supabase.com:6543/postgres` |
+| `BOOTSTRAP_SECRET` | Secret for initial admin key creation | `your-generated-secret` |
 
 ---
 
-## 📁 Deployment Files
+## 📝 Deployment Files
 
 ### Procfile
 ```
@@ -73,6 +76,10 @@ python-multipart==0.0.6
 python-dotenv==1.0.0
 sqlalchemy==2.0.23
 psycopg2-binary==2.9.9
+requests>=2.31.0
+pytest>=7.4.0
+httpx==0.27.0
+pytest-asyncio>=0.21.0
 ```
 
 ### settings.py Import (Line 10)
@@ -158,26 +165,41 @@ postgresql://postgres.[project-ref]:[password]@aws-0-us-east-1.pooler.supabase.c
 | `countries` | 5 | Country profiles (Ghana, Kenya, Zambia, Pakistan, Bangladesh) |
 | `debt_data` | 5 | Debt service and development cost data (2023) |
 | `precedents` | 5 | Historical debt restructuring cases (2017-2023) |
+| `api_keys` | 1+ | API keys with permissions and rate limits |
 
 ---
 
 ## 🔒 Security Configuration
 
-### Current Security Measures
+### Implemented Security Measures
 
+- ✅ API key authentication on all data endpoints
+- ✅ Rate limiting (100 req/min standard, 1000/min admin)
+- ✅ Permission levels (read, read_write, admin)
+- ✅ SHA-256 key hashing (secure storage)
+- ✅ Bootstrap secret in environment variable
 - ✅ No credentials in Git repository
 - ✅ DATABASE_URL stored as environment variable
 - ✅ Repository is private on GitHub
 - ✅ HTTPS enabled (automatic on Render)
 - ✅ CORS configured for allowed origins
 
-### Security Checklist for Production
+### API Key Authentication
 
-- [ ] Add API key authentication
-- [ ] Implement rate limiting
-- [ ] Set up Sentry error monitoring
-- [ ] Add request logging
-- [ ] Configure security headers
+All data endpoints require the `X-API-Key` header:
+
+```bash
+curl -H "X-API-Key: bf_your_key_id_your_secret" \
+  https://borrowers-forum.onrender.com/api/v1/countries
+```
+
+### Bootstrap Secret
+
+The bootstrap secret is used for initial admin key creation:
+
+1. Generate a secret: `python -c "import secrets; print(secrets.token_urlsafe(32))"`
+2. Add to Render environment variables as `BOOTSTRAP_SECRET`
+3. Use `POST /api/v1/admin/keys/bootstrap` to create the first admin key
 
 ---
 
@@ -248,24 +270,51 @@ Expected response:
 }
 ```
 
-### Test API Endpoints
+### Test Protected Endpoints
 
 ```bash
-# List countries
-curl https://borrowers-forum.onrender.com/api/v1/countries
+# List countries (requires API key)
+curl -H "X-API-Key: your_key_here" \
+  https://borrowers-forum.onrender.com/api/v1/countries
 
-# Get calculator info
-curl https://borrowers-forum.onrender.com/api/v1/debt/info
+# Get calculator info (requires API key)
+curl -H "X-API-Key: your_key_here" \
+  https://borrowers-forum.onrender.com/api/v1/debt/info
 
-# Get precedent statistics
-curl https://borrowers-forum.onrender.com/api/v1/precedents/stats
+# Get precedent statistics (requires API key)
+curl -H "X-API-Key: your_key_here" \
+  https://borrowers-forum.onrender.com/api/v1/precedents/stats
 ```
 
 ### Swagger UI Testing
 
 Visit: https://borrowers-forum.onrender.com/api/docs
 
-Use the interactive interface to test all endpoints.
+1. Click the **Authorize** button (top right)
+2. Enter your API key
+3. Use the interactive interface to test all endpoints
+
+---
+
+## 🧪 Running Tests
+
+The project includes 38 automated tests:
+
+```bash
+# Activate virtual environment
+.\venv\Scripts\Activate.ps1  # Windows
+source venv/bin/activate      # Mac/Linux
+
+# Run all tests
+pytest tests/ -v
+```
+
+**Test Coverage:**
+- test_health.py - 4 tests
+- test_countries.py - 6 tests
+- test_debt.py - 10 tests
+- test_precedents.py - 9 tests
+- test_auth.py - 9 tests
 
 ---
 
@@ -288,7 +337,7 @@ Use the interactive interface to test all endpoints.
 
 - [ ] Procfile created in root directory
 - [ ] runtime.txt created with Python version
-- [ ] requirements.txt has minimal production dependencies
+- [ ] requirements.txt has production dependencies
 - [ ] settings.py uses `from pydantic import BaseSettings`
 - [ ] .gitignore excludes .env and sensitive files
 - [ ] DATABASE_URL works locally
@@ -300,6 +349,7 @@ Use the interactive interface to test all endpoints.
 - [ ] Start command set: `uvicorn src.api.main:app --host 0.0.0.0 --port $PORT`
 - [ ] `PYTHON_VERSION=3.11.10` environment variable added
 - [ ] `DATABASE_URL` environment variable added
+- [ ] `BOOTSTRAP_SECRET` environment variable added
 - [ ] Free tier selected (or paid for production)
 
 ### Post-Deployment Verification
@@ -307,8 +357,16 @@ Use the interactive interface to test all endpoints.
 - [ ] Root endpoint responds (/)
 - [ ] Health check shows "healthy" (/health)
 - [ ] Swagger UI loads (/api/docs)
-- [ ] Database queries work (/api/v1/countries)
-- [ ] Calculations work (/api/v1/debt/calculate)
+- [ ] Bootstrap endpoint works (one-time)
+- [ ] Admin key created and saved securely
+- [ ] Protected endpoints work with API key
+
+### Security Verification
+
+- [ ] API key authentication working
+- [ ] Rate limiting working
+- [ ] Bootstrap secret not exposed
+- [ ] Old API keys rotated if exposed
 
 ---
 
