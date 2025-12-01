@@ -1,7 +1,7 @@
 # 🔄 Chat Handoff - Borrower's Forum Platform
 
 **Last Updated**: December 1, 2025  
-**Project Phase**: Phase 6 Complete ✅ (LIVE!)  
+**Project Phase**: Phase 4 & 7 Complete ✅ (Authentication + Live Data)  
 **Developer**: AnneNgarachu  
 **GitHub**: https://github.com/AnneNgarachu/Borrowers-Forum (Private)
 
@@ -18,6 +18,8 @@
 | **Health Check** | https://borrowers-forum.onrender.com/health |
 | **ReDoc** | https://borrowers-forum.onrender.com/api/redoc |
 
+**⚠️ All data endpoints now require API key authentication!**
+
 ---
 
 ## 📊 PROJECT OVERVIEW
@@ -27,6 +29,7 @@
 **Mission**: Enable debt-stressed countries to make informed decisions by providing:
 - Debt service vs development spending comparisons (✅ LIVE)
 - Historical debt restructuring precedents with AI similarity matching (✅ LIVE)
+- **Live World Bank data for 190+ countries** (✅ NEW!)
 - Climate vulnerability considerations
 - Data-driven negotiation support
 
@@ -115,24 +118,113 @@ Render defaults to Python 3.13, which is incompatible with Pydantic V1. Adding `
 
 **Documentation:** See `docs/DEPLOYMENT_GUIDE.md` for full deployment details.
 
+### **Phase 7: Security & Authentication** ✅ COMPLETE (December 1, 2025)
+
+**What Was Accomplished:**
+- ✅ API Key authentication system (all data endpoints protected)
+- ✅ Rate limiting (100 req/min standard, 1000 for admin)
+- ✅ Bootstrap endpoint for initial admin key creation
+- ✅ Key management (create, list, deactivate, reactivate)
+- ✅ Permission levels: `read`, `read_write`, `admin`
+- ✅ SHA-256 key hashing (secure storage)
+- ✅ Timing-safe comparison (prevents timing attacks)
+
+**Files Created:**
+```
+src/api/auth.py              - Authentication dependencies & rate limiter
+src/services/auth_service.py - Key generation, hashing, verification
+src/api/routers/admin.py     - Admin endpoints for key management
+src/utils/add_api_keys_table.py - Database table setup script
+```
+
+**Admin Endpoints Added (6):**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/admin/keys/bootstrap` | Create first admin key (one-time) |
+| POST | `/api/v1/admin/keys` | Generate new API key |
+| GET | `/api/v1/admin/keys` | List all API keys |
+| GET | `/api/v1/admin/keys/{key_id}` | Get key details |
+| DELETE | `/api/v1/admin/keys/{key_id}` | Deactivate key |
+| POST | `/api/v1/admin/keys/{key_id}/reactivate` | Reactivate key |
+
+**Database Changes:**
+- Added `api_keys` table to Supabase (12 columns)
+- Columns: id, key_id, key_hash, name, owner, permissions, is_active, rate_limit_per_minute, created_at, last_used_at, expires_at, usage_count
+
+**API Key Format:** `bf_<key_id>_<secret>`
+- Example: `bf_abc123def456ghij_aBcDeFgHiJkLmNoPqRsTuVwXyZ012345`
+
+**Key Lesson Learned:**
+Local Python version must match production. Python 3.13 is incompatible with Pydantic V1 - use Python 3.11.
+
+### **Phase 4: Real Data Integration** ✅ COMPLETE (December 1, 2025)
+
+**What Was Accomplished:**
+- ✅ World Bank API integration (live economic data)
+- ✅ Support for 190+ countries (any with World Bank data)
+- ✅ Live debt calculator endpoint
+- ✅ In-memory caching (1-hour TTL)
+- ✅ Automatic income-level based cost estimates
+
+**Files Created:**
+```
+src/services/external_data.py   - World Bank & IMF API clients
+src/api/routers/live_data.py    - Live data endpoints
+```
+
+**Live Data Endpoints Added (3):**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/live/economic/{country_code}` | Real GDP, debt, population |
+| GET | `/api/v1/live/debt/{country_code}` | Debt data for calculator |
+| GET | `/api/v1/live/countries` | Supported countries list |
+
+**Updated Endpoints (1):**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/debt/calculate-live` | Calculate with live World Bank data |
+
+**World Bank Indicators Used:**
+- `NY.GDP.MKTP.CD` - GDP (current US$)
+- `SP.POP.TOTL` - Population
+- `DT.DOD.DECT.CD` - External debt stocks
+- `DT.TDS.DECT.CD` - Total debt service
+- `GC.REV.XGRT.GD.ZS` - Revenue (% of GDP)
+
+**Income-Level Cost Estimates:**
+| Level | Doctor Salary | School Cost | Climate Budget |
+|-------|---------------|-------------|----------------|
+| LIC | $8,000 | $200,000 | 2.0% of GDP |
+| LMC | $15,000 | $350,000 | 1.5% of GDP |
+| UMC | $30,000 | $500,000 | 1.0% of GDP |
+| HIC | $80,000 | $1,000,000 | 0.5% of GDP |
+
+**Key Feature:** The `/debt/calculate-live` endpoint fetches real-time data and automatically adjusts salary/cost estimates based on World Bank income classification.
+
 ---
 
 ## 🎯 CURRENT STATUS
 
 **Live Platform:**
 - 🌐 URL: https://borrowers-forum.onrender.com
-- 📊 9 functional API endpoints
+- 📊 19 functional API endpoints (was 9)
+- 🔐 API key authentication required
+- 🌍 Live World Bank data for 190+ countries
 - 🗄️ 15 database records (test data)
 - 📖 Auto-generated Swagger documentation
 
 **Working Features**:
 - ✅ API running on Render (cloud)
 - ✅ Database connected to Supabase (PostgreSQL)
+- ✅ API key authentication on all data endpoints
+- ✅ Rate limiting (100 req/min)
+- ✅ Live World Bank data integration
 - ✅ 3 tables in cloud: countries, debt_data, precedents
+- ✅ 1 new table: api_keys
 - ✅ 5 countries: Ghana, Kenya, Zambia, Pakistan, Bangladesh
 - ✅ 5 debt data records (2023 data with realistic estimates)
 - ✅ 5 precedent cases (2017-2023, Paris Club, Common Framework, etc.)
-- ✅ 9 functional API endpoints total
+- ✅ 19 functional API endpoints total
 - ✅ Interactive API documentation at /api/docs
 - ✅ Health check endpoint functional
 
@@ -145,35 +237,73 @@ Render defaults to Python 3.13, which is incompatible with Pydantic V1. Adding `
 **Database**:
 - ✅ Supabase PostgreSQL (cloud)
 - ✅ Connection: Session Pooler (IPv4 compatible)
-- ✅ Tables: countries (5 rows), debt_data (5 rows), precedents (5 rows)
+- ✅ Tables: countries (5), debt_data (5), precedents (5), api_keys (1)
 
 ---
 
 ## 🔜 REMAINING PHASES
 
-### **Phase 4: Real Data Integration** (2-3 hours)
-- Connect to IMF API for real debt data
-- Connect to World Bank API for economic indicators
-- Replace test data with live data
-
 ### **Phase 5: Testing & Documentation** (2-3 hours)
 - Write automated tests (pytest)
+- Test authentication flows
+- Test rate limiting
 - Complete API documentation
-- Create user guide
-
-### **Phase 7: Security & Monitoring** (1-2 hours)
-- Add API key authentication
-- Set up Sentry error monitoring
-- Implement rate limiting
 
 ### **Phase 8: Frontend Dashboard** (Optional - 8-12 hours)
-- Build a visual interface
+- Build a visual interface (React)
 - Charts and graphs for debt data
 - User-friendly forms
+- Would need React developers
+
+---
+
+## ⚠️ SECURITY TO-DO (Before Production Release)
+
+| Issue | Priority | Action |
+|-------|----------|--------|
+| **Rotate API Key** | 🔴 High | Key `bf_t120xwq47xtk3tdd_...` was exposed in screenshots. Deactivate and create new. |
+| **Move Bootstrap Secret** | 🟡 Medium | Change hardcoded secret in `src/api/routers/admin.py` to environment variable |
+| **Database Password** | ✅ Done | New repo created, password reset (Phase 6) |
+
+### How to Rotate API Key:
+1. Go to Swagger UI and authorize with current key
+2. Use `POST /api/v1/admin/keys` to create a new admin key
+3. Save the new key securely (password manager)
+4. Use `DELETE /api/v1/admin/keys/{old_key_id}` to deactivate old key
+5. Update `.env` with new key
 
 ---
 
 ## 🔑 IMPORTANT NUANCES & GOTCHAS
+
+### **Authentication (NEW):**
+
+1. **API Key Required**:
+   - All data endpoints require `X-API-Key` header
+   - Use Swagger "Authorize" button to test
+   - Bootstrap endpoint only works once (when no admin keys exist)
+
+2. **Permission Levels**:
+   - `read` - Can read data (GET endpoints)
+   - `read_write` - Can read and create (GET, POST)
+   - `admin` - Full access including key management
+
+3. **Rate Limiting**:
+   - Standard keys: 100 requests/minute
+   - Admin keys: 1000 requests/minute
+   - In-memory (resets on server restart)
+
+### **Live Data (NEW):**
+
+1. **World Bank API**:
+   - Free, no authentication required
+   - Data cached for 1 hour
+   - Some countries may have missing data for certain years
+
+2. **Income Level Detection**:
+   - Automatically detected from World Bank
+   - Used to estimate salaries and costs
+   - LIC, LMC, UMC, HIC classifications
 
 ### **Deployment Issues (CRITICAL):**
 
@@ -187,6 +317,7 @@ Render defaults to Python 3.13, which is incompatible with Pydantic V1. Adding `
    - Pydantic V2 requires Rust compilation (fails on free tiers)
    - Our code uses Pydantic V1 syntax: `from pydantic import BaseSettings`
    - requirements.txt must have: `pydantic==1.10.13`
+   - Use `orm_mode = True` NOT `from_attributes = True`
 
 3. **SQLAlchemy 2.0 text() Requirement**:
    - Raw SQL must use `text()` wrapper
@@ -214,6 +345,10 @@ Render defaults to Python 3.13, which is incompatible with Pydantic V1. Adding `
    - Must run from venv: `uvicorn src.api.main:app --reload`
    - If fails: Use `python -m uvicorn src.api.main:app --reload`
 
+3. **echo Command Issue**:
+   - `echo text >> file` can corrupt files in PowerShell
+   - **Solution**: Edit files directly in VS Code instead
+
 ### **API Design Decisions**:
 1. **Why POST for `/debt/calculate`?**
    - Not idempotent (calculations could vary with updated data)
@@ -230,44 +365,98 @@ Render defaults to Python 3.13, which is incompatible with Pydantic V1. Adding `
 
 ---
 
-## 📁 PROJECT STRUCTURE (Updated for Phase 6)
-
+## 📁 PROJECT STRUCTURE (Updated for Phase 4 & 7)
 ```
 Borrower's-Forum-Platform/
 ├── src/
 │   ├── api/
 │   │   ├── main.py                      # FastAPI application ✅
 │   │   ├── dependencies.py              # DB session injection ✅
+│   │   ├── auth.py                      # Auth dependencies ✅ NEW!
 │   │   └── routers/
 │   │       ├── __init__.py
-│   │       ├── countries.py             # Countries endpoints ✅
-│   │       ├── debt.py                  # Debt calculator ✅
-│   │       └── precedents.py            # Precedents search ✅
+│   │       ├── countries.py             # Countries endpoints (protected) ✅
+│   │       ├── debt.py                  # Debt calculator + live ✅ UPDATED!
+│   │       ├── precedents.py            # Precedents search (protected) ✅
+│   │       ├── admin.py                 # Admin key management ✅ NEW!
+│   │       └── live_data.py             # Live World Bank data ✅ NEW!
 │   ├── config/
 │   │   └── settings.py                  # Configuration ✅
 │   ├── models/
-│   │   └── debt_data.py                 # Database models ✅
+│   │   └── debt_data.py                 # Database models (+ APIKey) ✅ UPDATED!
 │   ├── services/
 │   │   ├── database.py                  # Database service ✅
 │   │   ├── debt_calculator.py           # Debt calc logic ✅
-│   │   └── precedent_search.py          # Search logic ✅
+│   │   ├── precedent_search.py          # Search logic ✅
+│   │   ├── auth_service.py              # API key service ✅ NEW!
+│   │   └── external_data.py             # World Bank API client ✅ NEW!
 │   └── utils/
 │       ├── env_validator.py             # Environment validation ✅
 │       ├── add_test_data.py             # Countries test data ✅
 │       ├── add_debt_test_data.py        # Debt data ✅
-│       └── add_precedent_test_data.py   # Precedents ✅
+│       ├── add_precedent_test_data.py   # Precedents ✅
+│       └── add_api_keys_table.py        # API keys table setup ✅ NEW!
 ├── docs/
 │   ├── ARCHITECTURE.md                  # Architecture overview ✅
 │   ├── CHAT_HANDOFF.md                  # This file ✅
-│   └── DEPLOYMENT_GUIDE.md              # Deployment guide ✅ NEW!
-├── Procfile                             # Render start command ✅ NEW!
-├── runtime.txt                          # Python version ✅ NEW!
+│   └── DEPLOYMENT_GUIDE.md              # Deployment guide ✅
+├── Procfile                             # Render start command ✅
+├── runtime.txt                          # Python version ✅
 ├── requirements.txt                     # Production dependencies ✅ UPDATED!
 ├── .env                                 # Environment variables ⚠️ NOT IN GIT
 ├── .env.example                         # Example env file ✅
 ├── .gitignore                           # Git ignore rules ✅
 └── README.md                            # Project documentation ✅
 ```
+
+---
+
+## 🔗 ALL API ENDPOINTS (19 Total)
+
+### **Public Endpoints (2):**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | API information |
+| GET | `/health` | Health check |
+
+### **Countries (3) - Protected:**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/countries` | List all countries |
+| GET | `/api/v1/countries/{code}` | Get country by code |
+| POST | `/api/v1/countries` | Create country (write permission) |
+
+### **Debt Calculator (4) - Protected:**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/debt/calculate` | Calculate with stored data |
+| POST | `/api/v1/debt/calculate-live` | Calculate with live World Bank data ⭐ NEW |
+| POST | `/api/v1/debt/compare` | Compare scenarios |
+| GET | `/api/v1/debt/info` | Calculator methodology |
+
+### **Precedents Search (3) - Protected:**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/precedents` | Search with filters |
+| GET | `/api/v1/precedents/similar` | AI similarity matching |
+| GET | `/api/v1/precedents/stats` | Statistics |
+
+### **Live Data (3) - Protected:**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/live/economic/{code}` | Live economic data ⭐ NEW |
+| GET | `/api/v1/live/debt/{code}` | Live debt data ⭐ NEW |
+| GET | `/api/v1/live/countries` | Supported countries ⭐ NEW |
+
+### **Admin (6) - Admin Permission Required:**
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/admin/keys/bootstrap` | Create first admin key ⭐ NEW |
+| POST | `/api/v1/admin/keys` | Generate new key ⭐ NEW |
+| GET | `/api/v1/admin/keys` | List all keys ⭐ NEW |
+| GET | `/api/v1/admin/keys/{key_id}` | Get key details ⭐ NEW |
+| DELETE | `/api/v1/admin/keys/{key_id}` | Deactivate key ⭐ NEW |
+| POST | `/api/v1/admin/keys/{key_id}/reactivate` | Reactivate key ⭐ NEW |
 
 ---
 
@@ -281,10 +470,10 @@ curl https://borrowers-forum.onrender.com
 # Health check
 curl https://borrowers-forum.onrender.com/health
 
-# List countries
-curl https://borrowers-forum.onrender.com/api/v1/countries
+# List countries (requires API key!)
+curl -H "X-API-Key: your_key_here" https://borrowers-forum.onrender.com/api/v1/countries
 
-# Swagger UI (open in browser)
+# Swagger UI (open in browser - use Authorize button for API key)
 https://borrowers-forum.onrender.com/api/docs
 ```
 
@@ -349,6 +538,10 @@ git push origin main          # Push to GitHub (triggers Render deploy)
 - Bangladesh 2017 (Official, Flow, 12% NPV reduction)
 - **3 have climate clauses** (Yes or Partial)
 
+### **APIKeys Table** (1 record) ⭐ NEW:
+- Admin key for Anne Ngarachu
+- Fields: id, key_id, key_hash, name, owner, permissions, is_active, rate_limit_per_minute, created_at, last_used_at, expires_at, usage_count
+
 ---
 
 ## 🔧 DEPLOYMENT CONFIGURATION
@@ -359,7 +552,7 @@ Service Type: Web Service
 Instance: Free ($0/month)
 Region: Oregon (US West)
 Branch: main
-Auto-Deploy: Enabled
+Auto-Deploy: On Commit ✅
 ```
 
 ### **Build & Start Commands:**
@@ -395,6 +588,7 @@ python-multipart==0.0.6
 python-dotenv==1.0.0
 sqlalchemy==2.0.23
 psycopg2-binary==2.9.9
+requests>=2.31.0
 ```
 
 ---
@@ -460,10 +654,18 @@ psycopg2-binary==2.9.9
    - **FIXED**: Added `PYTHON_VERSION=3.11.10` environment variable
    - **Root Cause**: Python 3.13 incompatible with Pydantic V1
 
+### **Pending Security Items** ⚠️:
+1. **API Key Exposed in Screenshots**
+   - Key `bf_t120xwq47xtk3tdd_...` visible in curl command
+   - **Action**: Rotate key before production use
+   
+2. **Bootstrap Secret Hardcoded**
+   - Secret in `src/api/routers/admin.py`
+   - **Action**: Move to environment variable
+
 ### **Minor Issues** (Non-blocking):
-1. ~~Database health check shows "degraded" due to SQL expression warning~~
-   - **FIXED**: Updated to use `text()` wrapper in database.py
-2. Free tier instances spin down after 15 minutes (normal behavior)
+1. Free tier instances spin down after 15 minutes (normal behavior)
+2. In-memory rate limiting resets on server restart
 
 ### **Future Improvements**:
 1. Add pagination to all list endpoints
@@ -472,8 +674,8 @@ psycopg2-binary==2.9.9
 4. Add request/response examples in docstrings
 5. Add database migrations with Alembic
 6. Add caching (Redis) for frequently accessed data
-7. Add rate limiting for API endpoints
-8. Add API key authentication
+7. ~~Add rate limiting for API endpoints~~ ✅ DONE
+8. ~~Add API key authentication~~ ✅ DONE
 
 ---
 
@@ -490,18 +692,36 @@ When continuing this project in a new chat:
 2. **Say to Claude**:
 ```
 I'm continuing the Borrower's Forum Platform project.
-Phase 6 (Deployment) is complete - platform is LIVE!
-Please read docs/CHAT_HANDOFF.md from project knowledge 
-and let's decide what to do next.
+
+**Completed Phases:**
+- Phase 1-3: Foundation, Database, Core Features
+- Phase 6: Deployment to Render
+- Phase 7: API Key Authentication & Rate Limiting
+- Phase 4: World Bank API Integration & Live Data
+
+**Current Status:**
+- 19 API endpoints (all protected with API keys)
+- Live World Bank data for 190+ countries
+- Production: https://borrowers-forum.onrender.com
+
+Please read docs/CHAT_HANDOFF.md from project knowledge.
+
+**Next options:**
+1. Phase 5: Testing (pytest)
+2. Security cleanup (rotate API key)
+3. Phase 8: Frontend Dashboard
+
+Which should we tackle?
 ```
 
 3. **Claude will**:
    - ✅ Read the handoff document
    - ✅ Understand project context and current state
-   - ✅ Know the platform is live at https://borrowers-forum.onrender.com
+   - ✅ Know the platform is live with authentication
+   - ✅ Know about live World Bank data integration
    - ✅ Review framework decisions
    - ✅ Understand all the nuances and gotchas
-   - ✅ Help you decide: Phase 4 (data), Phase 5 (testing), or Phase 7 (security)
+   - ✅ Help you decide next steps
 
 ---
 
@@ -525,6 +745,21 @@ and let's decide what to do next.
 - [x] Health check working
 - [x] Deployment documentation created
 
+### **Phase 7:** ✅ COMPLETE
+- [x] API key authentication system
+- [x] Rate limiting (100/1000 req/min)
+- [x] Admin key management endpoints
+- [x] Bootstrap endpoint for initial setup
+- [x] Permission levels (read, read_write, admin)
+- [x] All data endpoints protected
+
+### **Phase 4:** ✅ COMPLETE
+- [x] World Bank API integration
+- [x] Live economic data endpoints
+- [x] Live debt calculator endpoint
+- [x] 190+ country support
+- [x] In-memory caching
+
 ---
 
 ## 🎉 WHAT WE BUILT
@@ -533,21 +768,27 @@ A **production-ready, live debt intelligence platform** featuring:
 
 ✅ **Live URL**: https://borrowers-forum.onrender.com
 
+✅ **Authentication & Security**:
+- API key required for all data endpoints
+- Rate limiting (100 req/min standard)
+- Admin key management
+- SHA-256 secure hashing
+
+✅ **Live World Bank Data**:
+- Real-time economic indicators
+- 190+ countries supported
+- GDP, population, debt, revenue data
+- Automatic income-level based estimates
+
 ✅ **Debt Calculator**:
 - Converts debt service to equivalent development resources
 - Shows opportunity costs (doctors, schools, climate projects)
 - Compares multiple debt scenarios
-- Provides economic context (debt-to-GDP ratios)
-- Cites data sources for transparency
+- **Live data mode** with real-time World Bank data
 
 ✅ **Precedents Search**:
 - Advanced filtering (10+ options)
-- **AI-powered similarity matching** with intelligent scoring:
-  - Regional similarity (+30 points)
-  - Income level matching (+25 points)
-  - Climate vulnerability alignment (+15 points)
-  - Debt amount similarity (+20 points)
-  - Recency bonus (+10 points)
+- **AI-powered similarity matching** with intelligent scoring
 - Statistics dashboard
 - Climate clause tracking
 
@@ -560,16 +801,16 @@ A **production-ready, live debt intelligence platform** featuring:
 - Framework-driven decisions
 - Cloud deployment (Render + Supabase)
 
-**Total API Endpoints**: 9  
-**Lines of Code**: ~3,000+  
+**Total API Endpoints**: 19  
+**Lines of Code**: ~4,500+  
 **Git Commits**: Multiple  
-**Test Data**: 15 database records  
+**Test Data**: 16 database records  
 **Development Time**: Multiple sessions  
-**Status**: 🟢 LIVE on the internet!
+**Status**: 🟢 LIVE on the internet with authentication!
 
 ---
 
 *Last updated: December 1, 2025*  
-*Project Status: Phase 6 Complete - LIVE at https://borrowers-forum.onrender.com*  
+*Project Status: Phase 4 & 7 Complete - LIVE at https://borrowers-forum.onrender.com*  
 *Developer: AnneNgarachu*  
-*Next Decision: Phase 4 (Real Data), Phase 5 (Testing), or Phase 7 (Security)?*
+*Next Decision: Phase 5 (Testing) or Phase 8 (Frontend)?*
