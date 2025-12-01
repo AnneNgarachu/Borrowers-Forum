@@ -272,6 +272,8 @@ async def health_check():
 from src.api.routers.countries import router as countries_router
 from src.api.routers.debt import router as debt_router
 from src.api.routers.precedents import router as precedents_router
+from src.api.routers.admin import router as admin_router
+
 
 
 
@@ -279,6 +281,8 @@ from src.api.routers.precedents import router as precedents_router
 app.include_router(countries_router, prefix=settings.API_V1_PREFIX, tags=["Countries"])
 app.include_router(debt_router, prefix=settings.API_V1_PREFIX, tags=["Debt Calculator"])
 app.include_router(precedents_router, prefix=settings.API_V1_PREFIX, tags=["Precedents Search"])
+app.include_router(admin_router, prefix=settings.API_V1_PREFIX, tags=["Admin - API Key Management"])
+
 
 
 

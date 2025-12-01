@@ -13,7 +13,8 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 from src.services.database import get_db
-from src.models.debt_data import Country
+from src.models.debt_data import Country, APIKey
+from src.api.auth import require_api_key, require_write_permission
 
 # ============================================
 # PYDANTIC MODELS (Request/Response Schemas)
@@ -42,7 +43,7 @@ class CountryResponse(BaseModel):
     
     class Config:
         """Pydantic configuration."""
-        from_attributes = True  # Allows creation from ORM models
+        orm_mode = True  # Allows creation from ORM models (Pydantic V1)
 
 
 class CountryListResponse(BaseModel):
@@ -81,7 +82,7 @@ router = APIRouter()
 
 
 # ============================================
-# ENDPOINTS
+# ENDPOINTS (Protected with API Key)
 # Framework: API Design & Integration Framework
 # ============================================
 
@@ -90,16 +91,18 @@ router = APIRouter()
     response_model=CountryListResponse,
     status_code=status.HTTP_200_OK,
     summary="List all countries",
-    description="Retrieve a list of all countries in the database with optional filtering",
+    description="Retrieve a list of all countries in the database with optional filtering. **Requires API key.**",
     responses={
         200: {"description": "List of countries retrieved successfully"},
+        401: {"description": "API key required"},
         500: {"description": "Internal server error"}
     }
 )
 async def list_countries(
     region: Optional[str] = Query(None, description="Filter by region"),
     income_level: Optional[str] = Query(None, description="Filter by income level"),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    api_key: APIKey = Depends(require_api_key)  # 🔒 Protected
 ):
     """
     List all countries.
@@ -109,10 +112,13 @@ async def list_countries(
     - Query parameters for filtering
     - Proper HTTP status codes
     
+    Requires: Valid API key with read permission.
+    
     Args:
         region: Optional region filter
         income_level: Optional income level filter
         db: Database session (injected by FastAPI)
+        api_key: Validated API key (injected by FastAPI)
     
     Returns:
         CountryListResponse: List of countries with metadata
@@ -152,16 +158,18 @@ async def list_countries(
     response_model=CountryResponse,
     status_code=status.HTTP_200_OK,
     summary="Get country by code",
-    description="Retrieve detailed information about a specific country",
+    description="Retrieve detailed information about a specific country. **Requires API key.**",
     responses={
         200: {"description": "Country found"},
+        401: {"description": "API key required"},
         404: {"description": "Country not found"},
         500: {"description": "Internal server error"}
     }
 )
 async def get_country(
     country_code: str,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    api_key: APIKey = Depends(require_api_key)  # 🔒 Protected
 ):
     """
     Get country by ISO code.
@@ -171,9 +179,12 @@ async def get_country(
     - Proper 404 handling
     - Clear error messages
     
+    Requires: Valid API key with read permission.
+    
     Args:
         country_code: ISO 3-letter country code (e.g., "GHA")
         db: Database session (injected by FastAPI)
+        api_key: Validated API key (injected by FastAPI)
     
     Returns:
         CountryResponse: Country details
@@ -213,9 +224,11 @@ async def get_country(
     response_model=CountryResponse,
     status_code=status.HTTP_201_CREATED,
     summary="Create new country",
-    description="Add a new country to the database",
+    description="Add a new country to the database. **Requires API key with write permission.**",
     responses={
         201: {"description": "Country created successfully"},
+        401: {"description": "API key required"},
+        403: {"description": "Write permission required"},
         409: {"description": "Country already exists"},
         422: {"description": "Validation error"},
         500: {"description": "Internal server error"}
@@ -223,7 +236,8 @@ async def get_country(
 )
 async def create_country(
     country_data: CountryCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    api_key: APIKey = Depends(require_write_permission)  # 🔒 Requires write permission
 ):
     """
     Create a new country.
@@ -233,9 +247,12 @@ async def create_country(
     - Duplicate detection
     - Input validation via Pydantic
     
+    Requires: Valid API key with write permission (read_write or admin).
+    
     Args:
         country_data: Country data to create
         db: Database session (injected by FastAPI)
+        api_key: Validated API key with write permission (injected by FastAPI)
     
     Returns:
         CountryResponse: Created country
@@ -323,6 +340,12 @@ COUNTRIES ROUTER DESIGN DECISIONS:
    - Automatically closed after request
    - Transaction management
 
+6. **Authentication** (Phase 7):
+   - All endpoints require API key
+   - GET endpoints: require_api_key (read permission)
+   - POST endpoint: require_write_permission (write permission)
+   - Rate limiting applied automatically
+
 HOW TO EXTEND:
 
 Add more endpoints:
@@ -345,7 +368,8 @@ async def list_countries(
     region: Optional[str] = None,
     min_population: Optional[int] = None,  # New filter
     max_gdp: Optional[float] = None,  # New filter
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    api_key: APIKey = Depends(require_api_key)
 ):
     query = db.query(Country)
     if min_population:

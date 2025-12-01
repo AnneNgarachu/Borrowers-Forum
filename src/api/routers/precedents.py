@@ -16,7 +16,9 @@ from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from src.api.dependencies import get_db
+from src.api.auth import require_api_key
 from src.services.precedent_search import PrecedentSearchService, PrecedentSearchError
+from src.models.debt_data import APIKey
 
 
 # Router instance
@@ -24,6 +26,7 @@ router = APIRouter(
     prefix="/precedents",
     tags=["Precedents Search"],
     responses={
+        401: {"description": "API key required"},
         404: {"description": "Precedent or country not found"},
         400: {"description": "Invalid request parameters"}
     }
@@ -86,13 +89,14 @@ class SimilarPrecedent(BaseModel):
     includes_climate_clause: Optional[str]
 
 
-# API Endpoints
+# API Endpoints (Protected with API Key)
 @router.get(
     "",
     status_code=status.HTTP_200_OK,
     summary="Search precedents",
     description="""
     Search historical debt restructuring precedents with multiple filters.
+    **Requires API key.**
     
     Filters available:
     - **country_code**: Filter by specific country (ISO 3-letter code)
@@ -158,26 +162,13 @@ async def search_precedents(
         description="Number of results to skip (for pagination)",
         ge=0
     ),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    api_key: APIKey = Depends(require_api_key)  # 🔒 Protected
 ):
     """
     Search precedents with filters.
     
-    Args:
-        country_code: Filter by country
-        year_start: Start of year range
-        year_end: End of year range
-        creditor_type: Type of creditor
-        treatment_type: Type of treatment
-        includes_climate: Filter by climate clause
-        min_debt_amount: Minimum debt amount
-        max_debt_amount: Maximum debt amount
-        limit: Results per page
-        offset: Pagination offset
-        db: Database session (injected)
-    
-    Returns:
-        Paginated list of precedents with filters applied
+    Requires: Valid API key with read permission.
     """
     try:
         service = PrecedentSearchService(db)
@@ -231,6 +222,7 @@ async def search_precedents(
     summary="Find similar precedents",
     description="""
     Find precedents similar to a given country and debt situation.
+    **Requires API key.**
     
     Uses intelligent similarity scoring based on:
     - **Regional similarity**: Same region = +30 points
@@ -261,19 +253,13 @@ async def find_similar_precedents(
         ge=1,
         le=50
     ),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    api_key: APIKey = Depends(require_api_key)  # 🔒 Protected
 ):
     """
     Find similar precedents using AI-powered similarity matching.
     
-    Args:
-        country_code: Reference country code
-        debt_amount_millions: Reference debt amount
-        limit: Maximum results
-        db: Database session (injected)
-    
-    Returns:
-        Ranked list of similar precedents with similarity scores
+    Requires: Valid API key with read permission.
     """
     try:
         service = PrecedentSearchService(db)
@@ -302,27 +288,17 @@ async def find_similar_precedents(
     "/stats",
     status_code=status.HTTP_200_OK,
     summary="Get precedent statistics",
-    description="Get statistics about available precedents in the database",
+    description="Get statistics about available precedents in the database. **Requires API key.**",
     response_description="Precedent statistics by category"
 )
 async def get_precedent_statistics(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    api_key: APIKey = Depends(require_api_key)  # 🔒 Protected
 ):
     """
     Get statistics about available precedents.
     
-    Returns counts by:
-    - Total precedents
-    - Creditor type
-    - Treatment type
-    - Climate clause presence
-    - Year range
-    
-    Args:
-        db: Database session (injected)
-    
-    Returns:
-        Statistics dictionary
+    Requires: Valid API key with read permission.
     """
     try:
         service = PrecedentSearchService(db)

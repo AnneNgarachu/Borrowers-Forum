@@ -7,6 +7,7 @@ Converts debt payments into equivalent doctors, schools, and climate projects.
 Endpoints:
 - POST /api/v1/debt/calculate - Calculate opportunity cost for single scenario
 - POST /api/v1/debt/compare - Compare multiple debt scenarios
+- GET /api/v1/debt/info - Get calculator methodology
 """
 
 from typing import List, Optional
@@ -15,12 +16,16 @@ from pydantic import BaseModel, Field, validator
 from sqlalchemy.orm import Session
 
 from ..dependencies import get_db
+from ..auth import require_api_key
 from ...services.debt_calculator import DebtCalculatorService, DebtCalculationError
+from ...models.debt_data import APIKey
+
 # Router instance
 router = APIRouter(
     prefix="/debt",
     tags=["Debt Calculator"],
     responses={
+        401: {"description": "API key required"},
         404: {"description": "Country or data not found"},
         400: {"description": "Invalid request parameters"},
         422: {"description": "Validation error"}
@@ -237,7 +242,7 @@ class DebtCalculationResponse(BaseModel):
         }
 
 
-# API Endpoints
+# API Endpoints (Protected with API Key)
 @router.post(
     "/calculate",
     response_model=DebtCalculationResponse,
@@ -245,6 +250,7 @@ class DebtCalculationResponse(BaseModel):
     summary="Calculate debt opportunity cost",
     description="""
     Calculate the opportunity cost of debt service payments in development terms.
+    **Requires API key.**
     
     This endpoint converts a debt service amount into equivalent:
     - Number of doctors that could be employed (1-year and 5-year contracts)
@@ -257,22 +263,13 @@ class DebtCalculationResponse(BaseModel):
 )
 async def calculate_debt_opportunity_cost(
     request: DebtCalculationRequest,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    api_key: APIKey = Depends(require_api_key)  # 🔒 Protected
 ) -> DebtCalculationResponse:
     """
     Calculate debt service opportunity cost.
     
-    Args:
-        request: Calculation request with country code, year, and debt amount
-        db: Database session (injected)
-    
-    Returns:
-        Calculated equivalents and context
-    
-    Raises:
-        HTTPException 404: Country or data not found
-        HTTPException 400: Invalid parameters or missing data
-        HTTPException 422: Validation error
+    Requires: Valid API key with read permission.
     """
     try:
         calculator = DebtCalculatorService(db)
@@ -284,7 +281,6 @@ async def calculate_debt_opportunity_cost(
         return result
     
     except DebtCalculationError as e:
-        # Determine appropriate status code
         error_message = str(e)
         
         if "not found" in error_message.lower():
@@ -299,7 +295,6 @@ async def calculate_debt_opportunity_cost(
             )
     
     except Exception as e:
-        # Log unexpected errors
         print(f"Unexpected error in debt calculation: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -313,6 +308,7 @@ async def calculate_debt_opportunity_cost(
     summary="Compare multiple debt scenarios",
     description="""
     Compare the opportunity costs of multiple debt service amounts.
+    **Requires API key.**
     
     This endpoint allows you to analyze different debt scenarios side-by-side,
     showing how different payment amounts translate to development resources.
@@ -326,21 +322,13 @@ async def calculate_debt_opportunity_cost(
 )
 async def compare_debt_scenarios(
     request: ComparisonRequest,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    api_key: APIKey = Depends(require_api_key)  # 🔒 Protected
 ):
     """
     Compare multiple debt scenarios.
     
-    Args:
-        request: Comparison request with country, year, and scenario amounts
-        db: Database session (injected)
-    
-    Returns:
-        Comparative analysis across scenarios
-    
-    Raises:
-        HTTPException 404: Country or data not found
-        HTTPException 400: Invalid parameters or insufficient scenarios
+    Requires: Valid API key with read permission.
     """
     try:
         calculator = DebtCalculatorService(db)
@@ -377,15 +365,16 @@ async def compare_debt_scenarios(
     "/info",
     status_code=status.HTTP_200_OK,
     summary="Get calculator information",
-    description="Get information about the debt calculator including methodology and data sources",
+    description="Get information about the debt calculator including methodology and data sources. **Requires API key.**",
     response_description="Calculator metadata and methodology"
 )
-async def get_calculator_info():
+async def get_calculator_info(
+    api_key: APIKey = Depends(require_api_key)  # 🔒 Protected
+):
     """
     Get debt calculator information and methodology.
     
-    Returns:
-        Calculator metadata, methodology, and usage examples
+    Requires: Valid API key with read permission.
     """
     return {
         "name": "Debt Opportunity Cost Calculator",

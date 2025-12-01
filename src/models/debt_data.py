@@ -7,7 +7,7 @@ Principle: Progressive schema design with proper relationships
 Why: Clean data structure makes queries easy and prevents data integrity issues
 """
 
-from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, CheckConstraint, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Float, DateTime, ForeignKey, CheckConstraint, UniqueConstraint, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from datetime import datetime
@@ -184,6 +184,57 @@ class Precedent(Base):
         return f"<Precedent(country_id='{self.country_id}', year={self.year}, type='{self.treatment_type}')>"
 
 
+class APIKey(Base):
+    """
+    API Key model for authentication.
+    
+    Framework: API Design Integration Framework
+    - Secure key storage (hashed, never plain text)
+    - Rate limiting per key
+    - Permission levels for access control
+    - Usage tracking for monitoring
+    
+    Key format: bf_<key_id>_<secret>
+    Example: bf_abc12345_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    
+    Why: Secure the API for UN stakeholder access
+    """
+    __tablename__ = "api_keys"
+    
+    # Primary key
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    
+    # Key identification (public part, used for lookups)
+    key_id = Column(String(16), unique=True, nullable=False, index=True)
+    
+    # Hashed secret (never store plain text!)
+    key_hash = Column(String(128), nullable=False)
+    
+    # Key metadata
+    name = Column(String(100), nullable=False)  # e.g., "UN Borrower's Forum - Production"
+    owner = Column(String(100), nullable=False)  # e.g., "UN DESA"
+    
+    # Permissions: "read", "read_write", "admin"
+    permissions = Column(String(20), nullable=False, default="read")
+    
+    # Status
+    is_active = Column(Boolean, nullable=False, default=True)
+    
+    # Rate limiting (requests per minute)
+    rate_limit_per_minute = Column(Integer, nullable=False, default=100)
+    
+    # Timestamps
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    last_used_at = Column(DateTime, nullable=True)
+    expires_at = Column(DateTime, nullable=True)  # Null = never expires
+    
+    # Usage tracking
+    usage_count = Column(Integer, nullable=False, default=0)
+    
+    def __repr__(self):
+        return f"<APIKey(name='{self.name}', owner='{self.owner}', active={self.is_active})>"
+
+
 # ============================================
 # DEVELOPER NOTES
 # ============================================
@@ -219,6 +270,13 @@ DATABASE SCHEMA DESIGN DECISIONS:
    - Float: Decimal precision for financial data
    - Integer: Whole numbers (years, months)
    - DateTime: Timezone-aware timestamps
+
+7. **APIKey Table** (Phase 7 - Security):
+   - key_id: Public identifier for lookups
+   - key_hash: SHA-256 hash of secret (never store plain text!)
+   - permissions: Role-based access control
+   - rate_limit_per_minute: Per-key rate limiting
+   - usage_count: Track API usage for monitoring
 
 HOW TO EXTEND THIS SCHEMA:
 
