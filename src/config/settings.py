@@ -71,7 +71,8 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     RATE_LIMIT_PER_HOUR: int = 1000
-    
+    BOOTSTRAP_SECRET: str = "change-this-in-production"
+
     # ============================================
     # DATA COLLECTION SETTINGS
     # Framework: Data Engineering Excellence Framework

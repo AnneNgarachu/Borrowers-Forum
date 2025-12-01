@@ -137,11 +137,12 @@ def bootstrap_admin_key(
             }
         )
     
-    # Verify bootstrap secret (simple check - in production, use env var)
-    # For now, we'll use a simple secret. You should change this!
-    BOOTSTRAP_SECRET = "borrowers-forum-initial-setup-2024"
+    # Verify bootstrap secret from environment variable
+    from src.config.settings import get_settings
+    settings = get_settings()
+   
     
-    if request.admin_secret != BOOTSTRAP_SECRET:
+    if request.admin_secret != settings.BOOTSTRAP_SECRET:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail={
