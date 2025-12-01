@@ -7,17 +7,19 @@ Converts debt payments into equivalent doctors, schools, and climate projects.
 Endpoints:
 - POST /api/v1/debt/calculate - Calculate opportunity cost for single scenario
 - POST /api/v1/debt/compare - Compare multiple debt scenarios
+- POST /api/v1/debt/calculate-live - Calculate using live World Bank data
 - GET /api/v1/debt/info - Get calculator methodology
 """
 
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from pydantic import BaseModel, Field, validator
 from sqlalchemy.orm import Session
 
 from ..dependencies import get_db
 from ..auth import require_api_key
 from ...services.debt_calculator import DebtCalculatorService, DebtCalculationError
+from ...services.external_data import ExternalDataService
 from ...models.debt_data import APIKey
 
 # Router instance
@@ -264,7 +266,7 @@ class DebtCalculationResponse(BaseModel):
 async def calculate_debt_opportunity_cost(
     request: DebtCalculationRequest,
     db: Session = Depends(get_db),
-    api_key: APIKey = Depends(require_api_key)  # 🔒 Protected
+    api_key: APIKey = Depends(require_api_key)
 ) -> DebtCalculationResponse:
     """
     Calculate debt service opportunity cost.
@@ -303,6 +305,125 @@ async def calculate_debt_opportunity_cost(
 
 
 @router.post(
+    "/calculate-live",
+    status_code=status.HTTP_200_OK,
+    summary="Calculate with live World Bank data",
+    description="""
+    Calculate opportunity cost using real-time World Bank data.
+    **Requires API key.**
+    
+    Unlike /calculate which uses stored data, this endpoint fetches
+    live economic indicators from the World Bank API.
+    
+    Supports any country with World Bank data (most countries worldwide).
+    """,
+    response_description="Calculated opportunity costs with live data"
+)
+async def calculate_with_live_data(
+    country_code: str = Query(..., min_length=3, max_length=3, description="ISO 3-letter country code"),
+    year: int = Query(2022, ge=2000, le=2024, description="Year for data"),
+    debt_amount_usd: float = Query(..., gt=0, description="Debt amount in USD"),
+    api_key: APIKey = Depends(require_api_key)
+):
+    """
+    Calculate debt opportunity cost using live World Bank data.
+    
+    Requires: Valid API key with read permission.
+    """
+    try:
+        # Fetch live data
+        service = ExternalDataService()
+        live_data = service.get_country_economic_data(country_code.upper(), year)
+        
+        if not live_data.get("country"):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Country '{country_code}' not found in World Bank database"
+            )
+        
+        country = live_data["country"]
+        indicators = live_data["economic_indicators"]
+        
+        # Get salary and cost estimates based on income level
+        income_level = country.get("income_level", "LMC")
+        
+        # Estimated costs by income level (USD)
+        cost_estimates = {
+            "LIC": {"doctor_salary": 8000, "school_cost": 200000, "climate_budget_pct": 2.0},
+            "LMC": {"doctor_salary": 15000, "school_cost": 350000, "climate_budget_pct": 1.5},
+            "UMC": {"doctor_salary": 30000, "school_cost": 500000, "climate_budget_pct": 1.0},
+            "HIC": {"doctor_salary": 80000, "school_cost": 1000000, "climate_budget_pct": 0.5},
+        }
+        
+        estimates = cost_estimates.get(income_level, cost_estimates["LMC"])
+        
+        doctor_salary = estimates["doctor_salary"]
+        school_cost = estimates["school_cost"]
+        gdp = indicators.get("gdp_usd") or 0
+        climate_budget = gdp * (estimates["climate_budget_pct"] / 100) if gdp else 0
+        
+        # Calculate equivalents
+        doctors_1yr = debt_amount_usd / doctor_salary if doctor_salary else 0
+        doctors_5yr = doctors_1yr / 5
+        schools = debt_amount_usd / school_cost if school_cost else 0
+        climate_pct = (debt_amount_usd / climate_budget * 100) if climate_budget else 0
+        
+        return {
+            "data_source": "World Bank Open Data API (Live)",
+            "country_info": {
+                "code": country.get("code"),
+                "name": country.get("name"),
+                "region": country.get("region"),
+                "income_level": income_level,
+                "capital": country.get("capital")
+            },
+            "calculation": {
+                "debt_amount_usd": debt_amount_usd,
+                "year": year
+            },
+            "live_indicators": {
+                "gdp_usd": indicators.get("gdp_usd"),
+                "population": indicators.get("population"),
+                "external_debt_usd": indicators.get("external_debt_usd"),
+                "debt_service_usd": indicators.get("debt_service_usd"),
+                "government_revenue_usd": indicators.get("government_revenue_usd")
+            },
+            "equivalents": {
+                "doctors": {
+                    "annual_employment": round(doctors_1yr),
+                    "five_year_employment": round(doctors_5yr),
+                    "estimated_salary_usd": doctor_salary,
+                    "description": f"Could employ {round(doctors_1yr):,} doctors for 1 year or {round(doctors_5yr):,} doctors for 5 years"
+                },
+                "schools": {
+                    "number_of_schools": round(schools),
+                    "estimated_cost_usd": school_cost,
+                    "description": f"Could build {round(schools):,} schools"
+                },
+                "climate_adaptation": {
+                    "percentage_of_annual_budget": round(climate_pct, 1),
+                    "estimated_annual_budget_usd": round(climate_budget),
+                    "description": f"Represents {round(climate_pct, 1)}% of estimated annual climate adaptation budget"
+                }
+            },
+            "methodology_notes": {
+                "salary_estimates": "Based on World Bank income classification",
+                "school_costs": "Regional average construction costs",
+                "climate_budget": f"Estimated at {estimates['climate_budget_pct']}% of GDP for {income_level} countries"
+            },
+            "metadata": live_data.get("metadata")
+        }
+        
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error calculating with live data: {str(e)}"
+        )
+
+
+@router.post(
     "/compare",
     status_code=status.HTTP_200_OK,
     summary="Compare multiple debt scenarios",
@@ -323,7 +444,7 @@ async def calculate_debt_opportunity_cost(
 async def compare_debt_scenarios(
     request: ComparisonRequest,
     db: Session = Depends(get_db),
-    api_key: APIKey = Depends(require_api_key)  # 🔒 Protected
+    api_key: APIKey = Depends(require_api_key)
 ):
     """
     Compare multiple debt scenarios.
@@ -369,7 +490,7 @@ async def compare_debt_scenarios(
     response_description="Calculator metadata and methodology"
 )
 async def get_calculator_info(
-    api_key: APIKey = Depends(require_api_key)  # 🔒 Protected
+    api_key: APIKey = Depends(require_api_key)
 ):
     """
     Get debt calculator information and methodology.
@@ -380,6 +501,10 @@ async def get_calculator_info(
         "name": "Debt Opportunity Cost Calculator",
         "version": "1.0.0",
         "description": "Converts debt service payments into equivalent development resources",
+        "endpoints": {
+            "/calculate": "Uses stored country data (5 countries)",
+            "/calculate-live": "Uses live World Bank data (190+ countries)"
+        },
         "methodology": {
             "doctors": {
                 "calculation": "Debt amount / (Annual doctor salary × Years)",
@@ -405,13 +530,18 @@ async def get_calculator_info(
                 ]
             }
         },
-        "data_sources": [
-            "IMF World Economic Outlook",
-            "World Bank Development Indicators",
-            "WHO Global Health Expenditure Database",
-            "UNESCO Institute for Statistics",
-            "UNFCCC National Communications"
-        ],
-        "supported_years": "2015-2030",
+        "data_sources": {
+            "stored_data": [
+                "IMF World Economic Outlook",
+                "World Bank Development Indicators",
+                "WHO Global Health Expenditure Database",
+                "UNESCO Institute for Statistics",
+                "UNFCCC National Communications"
+            ],
+            "live_data": [
+                "World Bank Open Data API (real-time)"
+            ]
+        },
+        "supported_years": "2000-2024 (live), 2015-2030 (stored)",
         "currency": "USD"
     }
