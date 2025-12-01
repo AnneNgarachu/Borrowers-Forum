@@ -1,8 +1,8 @@
 # 🏗️ Borrower's Forum Platform - Architecture
 
-**Last Updated**: November 29, 2025  
-**Version**: 1.0.0 (Phase 3 Complete)  
-**Status**: Production-ready API with test data
+**Last Updated**: December 1, 2025  
+**Version**: 1.0.0 (Phase 6 Complete - LIVE!)  
+**Status**: 🟢 Production - Live at https://borrowers-forum.onrender.com
 
 ---
 
@@ -10,21 +10,30 @@
 
 The Borrower's Forum Platform is a production-grade debt intelligence API that enables debt-stressed countries to make data-driven decisions through opportunity cost calculations and AI-powered precedent matching.
 
-### Current Capabilities (Phase 3)
+### Live Platform
 
-1. **Debt Calculator** ✅
+| Resource | URL |
+|----------|-----|
+| **Live API** | https://borrowers-forum.onrender.com |
+| **Swagger UI** | https://borrowers-forum.onrender.com/api/docs |
+| **Health Check** | https://borrowers-forum.onrender.com/health |
+| **ReDoc** | https://borrowers-forum.onrender.com/api/redoc |
+
+### Current Capabilities
+
+1. **Debt Calculator** ✅ LIVE
    - Convert debt service to equivalent development resources
    - Calculate opportunity costs (doctors, schools, climate projects)
    - Compare multiple debt scenarios
    - Provide economic context (debt-to-GDP ratios)
 
-2. **Precedents Search** ✅
+2. **Precedents Search** ✅ LIVE
    - Search 5 historical debt restructuring cases
    - AI-powered similarity matching (86% accuracy validated)
    - Advanced filtering (10+ filter options)
    - Climate clause tracking
 
-3. **Country Profiles** ✅
+3. **Country Profiles** ✅ LIVE
    - 5 country profiles with economic indicators
    - Climate vulnerability scoring
    - Population and GDP data
@@ -32,57 +41,58 @@ The Borrower's Forum Platform is a production-grade debt intelligence API that e
 ---
 
 ## 🏛️ Architecture Pattern: Clean Architecture
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │                  API Layer (FastAPI)                │
 │                                                     │
-│  ┌─────────────────────────────────────────────┐  │
-│  │  Routers (HTTP Endpoints)                   │  │
-│  │  - countries.py                             │  │
-│  │  - debt.py                                  │  │
-│  │  - precedents.py                            │  │
-│  └─────────────────────────────────────────────┘  │
+│  ┌─────────────────────────────────────────────┐   │
+│  │  Routers (HTTP Endpoints)                   │   │
+│  │  - countries.py                             │   │
+│  │  - debt.py                                  │   │
+│  │  - precedents.py                            │   │
+│  └─────────────────────────────────────────────┘   │
 │                       ↓                             │
-│  ┌─────────────────────────────────────────────┐  │
-│  │  Dependencies (Dependency Injection)        │  │
-│  │  - Database session management              │  │
-│  └─────────────────────────────────────────────┘  │
+│  ┌─────────────────────────────────────────────┐   │
+│  │  Dependencies (Dependency Injection)        │   │
+│  │  - Database session management              │   │
+│  └─────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────┘
                        ↓
 ┌─────────────────────────────────────────────────────┐
 │              Service Layer (Business Logic)         │
 │                                                     │
-│  ┌─────────────────────────────────────────────┐  │
-│  │  DebtCalculatorService                      │  │
-│  │  - calculate_opportunity_cost()             │  │
-│  │  - compare_scenarios()                      │  │
-│  │  - _calculate_equivalents()                 │  │
-│  └─────────────────────────────────────────────┘  │
+│  ┌─────────────────────────────────────────────┐   │
+│  │  DebtCalculatorService                      │   │
+│  │  - calculate_opportunity_cost()             │   │
+│  │  - compare_scenarios()                      │   │
+│  │  - _calculate_equivalents()                 │   │
+│  └─────────────────────────────────────────────┘   │
 │                                                     │
-│  ┌─────────────────────────────────────────────┐  │
-│  │  PrecedentSearchService                     │  │
-│  │  - search_precedents()                      │  │
-│  │  - find_similar_precedents()                │  │
-│  │  - _calculate_similarity_score()            │  │
-│  │  - get_precedent_statistics()               │  │
-│  └─────────────────────────────────────────────┘  │
+│  ┌─────────────────────────────────────────────┐   │
+│  │  PrecedentSearchService                     │   │
+│  │  - search_precedents()                      │   │
+│  │  - find_similar_precedents()                │   │
+│  │  - _calculate_similarity_score()            │   │
+│  │  - get_precedent_statistics()               │   │
+│  └─────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────┘
                        ↓
 ┌─────────────────────────────────────────────────────┐
 │           Data Layer (Database & ORM)               │
 │                                                     │
-│  ┌─────────────────────────────────────────────┐  │
-│  │  SQLAlchemy Models                          │  │
-│  │  - Country                                  │  │
-│  │  - DebtData                                 │  │
-│  │  - Precedent                                │  │
-│  └─────────────────────────────────────────────┘  │
+│  ┌─────────────────────────────────────────────┐   │
+│  │  SQLAlchemy Models                          │   │
+│  │  - Country                                  │   │
+│  │  - DebtData                                 │   │
+│  │  - Precedent                                │   │
+│  └─────────────────────────────────────────────┘   │
 │                                                     │
-│  ┌─────────────────────────────────────────────┐  │
-│  │  Database Service                           │  │
-│  │  - Session management                       │  │
-│  │  - Connection pooling                       │  │
-│  └─────────────────────────────────────────────┘  │
+│  ┌─────────────────────────────────────────────┐   │
+│  │  Database Service                           │   │
+│  │  - Session management                       │   │
+│  │  - Connection pooling                       │   │
+│  └─────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────┘
                        ↓
          ┌────────────────────────────┐
@@ -100,6 +110,73 @@ The Borrower's Forum Platform is a production-grade debt intelligence API that e
 ✅ **Testability**: Services can be tested independently  
 ✅ **Maintainability**: Changes in one layer don't affect others  
 ✅ **Scalability**: Easy to add new features or swap implementations  
+
+---
+
+## 🚀 Deployment Architecture
+
+### Production Stack
+
+```
+┌──────────────────────────────────────────────────────────┐
+│                        INTERNET                          │
+└──────────────────────────────────────────────────────────┘
+                            ↓
+┌──────────────────────────────────────────────────────────┐
+│                    Render (Hosting)                      │
+│  ┌────────────────────────────────────────────────────┐  │
+│  │  Web Service: borrowers-forum                      │  │
+│  │  - Instance: Free Tier                             │  │
+│  │  - Region: Oregon (US West)                        │  │
+│  │  - Auto-Deploy: Enabled                            │  │
+│  │  - URL: borrowers-forum.onrender.com               │  │
+│  └────────────────────────────────────────────────────┘  │
+│                                                          │
+│  Environment Variables:                                  │
+│  - PYTHON_VERSION=3.11.10                               │
+│  - DATABASE_URL=postgresql://...                        │
+└──────────────────────────────────────────────────────────┘
+                            ↓
+┌──────────────────────────────────────────────────────────┐
+│                   Application Layer                      │
+│  ┌────────────────────────────────────────────────────┐  │
+│  │  FastAPI Application                               │  │
+│  │  - Python 3.11 (forced via PYTHON_VERSION)         │  │
+│  │  - Pydantic V1 (1.10.13)                           │  │
+│  │  - SQLAlchemy 2.0                                  │  │
+│  │  - Uvicorn ASGI Server                             │  │
+│  └────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────┘
+                            ↓
+┌──────────────────────────────────────────────────────────┐
+│                 Supabase (Database)                      │
+│  ┌────────────────────────────────────────────────────┐  │
+│  │  PostgreSQL 15                                     │  │
+│  │  - Connection: Session Pooler (IPv4)               │  │
+│  │  - Port: 6543                                      │  │
+│  │  - Region: US East 1                               │  │
+│  │  - Tables: countries, debt_data, precedents        │  │
+│  └────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────┘
+```
+
+### Deployment Configuration
+
+| Setting | Value |
+|---------|-------|
+| **Platform** | Render |
+| **Service Type** | Web Service |
+| **Instance** | Free ($0/month) |
+| **Python Version** | 3.11.10 (via env var) |
+| **Build Command** | `pip install -r requirements.txt` |
+| **Start Command** | `uvicorn src.api.main:app --host 0.0.0.0 --port $PORT` |
+
+### Critical Environment Variables
+
+| Variable | Purpose | Required |
+|----------|---------|----------|
+| `PYTHON_VERSION` | Forces Python 3.11 (Pydantic V1 compatibility) | ✅ YES |
+| `DATABASE_URL` | PostgreSQL connection string | ✅ YES |
 
 ---
 
@@ -162,42 +239,14 @@ data_quality_score = Column(Integer, nullable=True, comment="0-100")
 - Team size: Solo developer
 - **Conclusion:** Prioritize readable, maintainable code over premature optimization
 
-**Evidence:**
-```python
-# Readable similarity scoring over optimized queries
-def _calculate_similarity_score(self, reference_country, precedent, ...):
-    score = 0.0
-    
-    # Regional similarity (30 points)
-    if reference_country.region == precedent_country.region:
-        score += 30
-    
-    # Clear, self-documenting code
-    # Can optimize with database queries later if needed
-```
+### **4. DevOps Infrastructure Framework** ✅ APPLIED
 
-### **4. Service Layer Pattern** ✅ APPLIED
-
-**Benefits:**
-- Business logic separate from API routes
-- Easier to test
-- Reusable across different interfaces
-- Single source of truth for calculations
-
-**Evidence:**
-```python
-# Service layer (src/services/debt_calculator.py)
-class DebtCalculatorService:
-    def calculate_opportunity_cost(self, country_code, year, debt_amount):
-        # Pure business logic, no HTTP concerns
-        
-# API layer (src/api/routers/debt.py)
-@router.post("/calculate")
-async def calculate_debt(request: DebtCalculationRequest, db: Session):
-    # HTTP handling, delegates to service
-    service = DebtCalculatorService(db)
-    return service.calculate_opportunity_cost(...)
-```
+**Applied in:**
+- Cloud deployment (Render)
+- Environment variable configuration
+- Health check endpoint
+- Auto-deployment from Git
+- Separation of development/production configurations
 
 ---
 
@@ -207,13 +256,14 @@ async def calculate_debt(request: DebtCalculationRequest, db: Session):
 
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| **Python** | 3.13+ | Programming language |
-| **FastAPI** | 0.115+ | Web framework |
-| **SQLAlchemy** | 2.0+ | ORM for database |
-| **Pydantic** | 2.0+ | Data validation |
-| **Uvicorn** | 0.30+ | ASGI server |
+| **Python** | 3.11.10 | Programming language |
+| **FastAPI** | 0.104.1 | Web framework |
+| **SQLAlchemy** | 2.0.23 | ORM for database |
+| **Pydantic** | 1.10.13 | Data validation |
+| **Uvicorn** | 0.24.0 | ASGI server |
 | **PostgreSQL** | 15+ | Database |
 | **Supabase** | Cloud | Database hosting |
+| **Render** | Cloud | Application hosting |
 
 ### **Why These Technologies?**
 
@@ -222,6 +272,12 @@ async def calculate_debt(request: DebtCalculationRequest, db: Session):
 - ✅ Type safety with Pydantic
 - ✅ Async support for scalability
 - ✅ Best-in-class performance for Python
+
+**Pydantic V1 (not V2):**
+- ✅ Pure Python (no Rust compilation needed)
+- ✅ Compatible with Python 3.11
+- ✅ Works on free hosting tiers
+- ⚠️ V2 requires Rust compiler (fails on Render/Railway free tiers)
 
 **SQLAlchemy 2.0:**
 - ✅ Type-safe ORM
@@ -240,6 +296,7 @@ async def calculate_debt(request: DebtCalculationRequest, db: Session):
 ## 🗄️ Database Schema
 
 ### **Entity Relationship Diagram**
+
 ```
 ┌─────────────────┐
 │    Countries    │
@@ -282,173 +339,56 @@ async def calculate_debt(request: DebtCalculationRequest, db: Session):
 └─────────────────┘
 ```
 
-### **Table Details**
+### **Current Data**
 
-**Countries** (5 records)
-```sql
-CREATE TABLE countries (
-    id UUID PRIMARY KEY,
-    code VARCHAR(3) UNIQUE NOT NULL,
-    name VARCHAR(100) NOT NULL,
-    region VARCHAR(100),
-    income_level VARCHAR(50),
-    population INTEGER,
-    gdp_usd_billions DECIMAL(10,2),
-    climate_vulnerability_score DECIMAL(5,2),
-    created_at TIMESTAMP DEFAULT NOW()
-);
-```
-
-**DebtData** (5 records)
-```sql
-CREATE TABLE debt_data (
-    id UUID PRIMARY KEY,
-    country_id UUID REFERENCES countries(id) ON DELETE CASCADE,
-    year INTEGER NOT NULL,
-    debt_service_usd_millions DECIMAL(15,2),
-    healthcare_worker_annual_salary_usd DECIMAL(10,2),
-    school_construction_cost_usd DECIMAL(15,2),
-    annual_climate_adaptation_budget_usd_millions DECIMAL(15,2),
-    data_quality_score INTEGER,
-    source_debt VARCHAR(500),
-    source_healthcare VARCHAR(500),
-    source_school VARCHAR(500),
-    source_climate VARCHAR(500),
-    created_at TIMESTAMP DEFAULT NOW()
-);
-```
-
-**Precedents** (5 records)
-```sql
-CREATE TABLE precedents (
-    id UUID PRIMARY KEY,
-    country_id UUID REFERENCES countries(id) ON DELETE CASCADE,
-    year INTEGER NOT NULL,
-    debt_amount_millions DECIMAL(15,2),
-    creditor_type VARCHAR(100),
-    treatment_type VARCHAR(100),
-    npv_reduction_percent DECIMAL(5,2),
-    grace_period_months INTEGER,
-    includes_climate_clause VARCHAR(20),
-    climate_notes TEXT,
-    terms_summary TEXT,
-    outcomes TEXT,
-    created_at TIMESTAMP DEFAULT NOW()
-);
-```
+| Table | Records | Sample Data |
+|-------|---------|-------------|
+| **countries** | 5 | Ghana, Kenya, Zambia, Pakistan, Bangladesh |
+| **debt_data** | 5 | 2023 debt service and development costs |
+| **precedents** | 5 | Historical cases from 2017-2023 |
 
 ---
 
 ## 🔌 API Design
 
 ### **Endpoint Structure**
+
 ```
+/                           # Root - API info
+/health                     # Health check
+
 /api/v1/
 ├── /countries
-│   ├── GET  /                      # List all countries
-│   ├── GET  /{code}                # Get country by code
-│   └── GET  /{code}/debt-data      # Get debt data for country
+│   ├── GET  /              # List all countries
+│   ├── POST /              # Create country
+│   └── GET  /{code}        # Get country by code
 │
 ├── /debt
-│   ├── POST /calculate             # Calculate opportunity costs
-│   ├── POST /compare               # Compare scenarios
-│   └── GET  /info                  # Calculator methodology
+│   ├── POST /calculate     # Calculate opportunity costs
+│   ├── POST /compare       # Compare scenarios
+│   └── GET  /info          # Calculator methodology
 │
 └── /precedents
-    ├── GET  /                      # Search precedents (with filters)
-    ├── GET  /similar               # AI similarity matching
-    └── GET  /stats                 # Statistics dashboard
+    ├── GET  /              # Search precedents (with filters)
+    ├── GET  /similar       # AI similarity matching
+    └── GET  /stats         # Statistics dashboard
 ```
 
-### **Request/Response Patterns**
-
-**Pattern 1: Simple GET with Path Parameter**
-```python
-GET /api/v1/countries/GHA
-
-Response: {
-    "code": "GHA",
-    "name": "Ghana",
-    "region": "Sub-Saharan Africa",
-    "income_level": "LMIC",
-    "climate_vulnerability_score": 45.2
-}
-```
-
-**Pattern 2: POST with Request Body**
-```python
-POST /api/v1/debt/calculate
-Body: {
-    "country_code": "GHA",
-    "year": 2023,
-    "debt_amount_usd": 50000000
-}
-
-Response: {
-    "country_info": {...},
-    "calculation": {...},
-    "equivalents": {
-        "doctors": {...},
-        "schools": {...},
-        "climate_adaptation": {...}
-    }
-}
-```
-
-**Pattern 3: GET with Query Parameters**
-```python
-GET /api/v1/precedents?country_code=GHA&year_start=2020&limit=10
-
-Response: {
-    "precedents": [...],
-    "total": 5,
-    "limit": 10,
-    "offset": 0,
-    "filters_applied": {...}
-}
-```
+### **Total Endpoints: 11** (2 root + 9 API)
 
 ---
 
 ## 🤖 AI Similarity Scoring Algorithm
 
-### **Algorithm Overview**
+### **Scoring Components (0-100 scale)**
 
-The precedent search uses a multi-factor weighted scoring system to find the most relevant historical cases.
-
-### **Scoring Components**
-```python
-def _calculate_similarity_score(reference_country, precedent, reference_debt):
-    score = 0.0  # Range: 0-100
-    
-    # 1. Regional Similarity (30 points max)
-    if reference_country.region == precedent_country.region:
-        score += 30  # Same region = full points
-    
-    # 2. Income Level Match (25 points max)
-    if reference_country.income_level == precedent_country.income_level:
-        score += 25  # Same income level = full points
-    
-    # 3. Climate Vulnerability (15 points max)
-    if both_have_climate_scores:
-        diff = abs(ref_score - prec_score)
-        similarity = max(0, 15 - (diff / 10 * 15))
-        score += similarity  # Within 10 points = full points
-    
-    # 4. Debt Amount Similarity (20 points max)
-    debt_ratio = precedent_debt / reference_debt
-    if 0.5 <= debt_ratio <= 2.0:  # Within 50-200%
-        deviation = abs(1.0 - debt_ratio)
-        similarity = max(0, 20 - (deviation * 40))
-        score += similarity  # 1:1 ratio = full points
-    
-    # 5. Recency (10 points max)
-    years_ago = current_year - precedent.year
-    recency_score = max(0, 10 - (years_ago / 5 * 10))
-    score += recency_score  # Within 5 years = full points
-    
-    return min(100, score)  # Cap at 100
-```
+| Factor | Max Points | Logic |
+|--------|------------|-------|
+| **Regional Similarity** | 30 | Same region = full points |
+| **Income Level Match** | 25 | Same income level = full points |
+| **Climate Vulnerability** | 15 | Within 10 points = full points |
+| **Debt Amount Similarity** | 20 | Within 50-200% = partial points |
+| **Recency** | 10 | Within 5 years = full points |
 
 ### **Example Scoring**
 
@@ -460,39 +400,25 @@ def _calculate_similarity_score(reference_country, precedent, reference_debt):
 - Climate match: +15 (exact score: 45.2)
 - Debt similarity: +18 ($1.8B vs $2B = 0.9 ratio)
 - Recency: +8 (5 years ago)
-- **Total: 96 points** → Capped at 100
 
 ---
 
 ## 🔒 Security Architecture
 
-### **Current Security Measures** (Phase 3)
+### **Current Security Measures**
 
-✅ **Environment Variables**
-- All secrets in `.env` file (not in Git)
-- Database credentials
-- API keys (for future integrations)
+✅ **Environment Variables**: All secrets in environment variables (not in Git)  
+✅ **Input Validation**: Pydantic models validate all inputs  
+✅ **SQL Injection Prevention**: SQLAlchemy ORM (no raw SQL)  
+✅ **CORS Configuration**: Configured allowed origins  
+✅ **HTTPS**: Automatic on Render  
+✅ **Private Repository**: Code not publicly accessible  
 
-✅ **Input Validation**
-- Pydantic models validate all inputs
-- Type checking at runtime
-- Range validation (e.g., year >= 1980)
-
-✅ **SQL Injection Prevention**
-- SQLAlchemy ORM (no raw SQL)
-- Parameterized queries
-- Type-safe database operations
-
-✅ **CORS Configuration**
-- Configured allowed origins
-- Proper headers
-
-### **Planned Security (Phase 6)**
+### **Planned Security (Phase 7)**
 
 - [ ] Authentication (OAuth 2.0 / JWT tokens)
 - [ ] Rate limiting (100 requests/hour per IP)
 - [ ] API key management
-- [ ] HTTPS enforcement
 - [ ] Request logging
 - [ ] Error monitoring (Sentry)
 
@@ -500,260 +426,121 @@ def _calculate_similarity_score(reference_country, precedent, reference_debt):
 
 ## 📈 Scalability Considerations
 
-### **Current Scale** (Phase 3)
+### **Current Scale**
 
 - **Expected Load**: < 1,000 users
 - **Data Size**: 15 database records
 - **Response Time**: < 100ms for calculations
 - **Architecture**: Monolithic API
 
-### **Scaling Strategy**
+### **Free Tier Limitations**
 
-**Phase 1 (Current)**: Single server, SQLite/PostgreSQL
-- ✅ Handles 1,000 concurrent users
-- ✅ Simple deployment
-- ✅ Easy to maintain
+| Limitation | Impact |
+|------------|--------|
+| Spin Down | Instance sleeps after 15 min inactivity |
+| Cold Start | First request after sleep: ~50 seconds |
+| RAM | 512 MB |
+| CPU | 0.1 CPU |
 
-**Phase 2 (10,000 users)**:
-- Add Redis caching for frequent queries
-- Horizontal scaling with load balancer
-- Read replicas for database
+### **Scaling Path**
 
-**Phase 3 (100,000+ users)**:
-- Microservices architecture
-- Message queue (RabbitMQ/Kafka)
-- CDN for static content
-- Database sharding
+1. **Phase 1 (Current)**: Free tier, handles ~1,000 users
+2. **Phase 2 (Growth)**: Paid tier ($7/month), no spin down
+3. **Phase 3 (Scale)**: Horizontal scaling, Redis cache
 
 ---
 
 ## 🧪 Testing Strategy
 
-### **Current Testing** (Manual)
+### **Current Testing**
 
 - ✅ Swagger UI interactive testing
 - ✅ Manual endpoint validation
-- ✅ Database integrity checks
+- ✅ Health check monitoring
 
-### **Planned Testing** (Phase 5)
+### **Planned Testing (Phase 5)**
 
-**Unit Tests:**
-```python
-# Test debt calculator logic
-def test_calculate_doctors_equivalents():
-    result = calculator.calculate_doctors(50000000, 20000)
-    assert result["annual_employment"] == 2500
-    assert result["five_year_employment"] == 500
-```
-
-**Integration Tests:**
-```python
-# Test API endpoints
-def test_debt_calculate_endpoint():
-    response = client.post("/api/v1/debt/calculate", json={
-        "country_code": "GHA",
-        "year": 2023,
-        "debt_amount_usd": 50000000
-    })
-    assert response.status_code == 200
-    assert "equivalents" in response.json()
-```
-
-**Framework:** pytest with >80% code coverage target
-
----
-
-## 🚀 Deployment Architecture
-
-### **Current Deployment** (Development)
-```
-Local Machine
-├── uvicorn server (localhost:8000)
-├── SQLite/PostgreSQL (local/Supabase)
-└── Browser (Swagger UI)
-```
-
-### **Planned Production Architecture**
-```
-                ┌──────────────┐
-                │  CloudFlare  │
-                │     CDN      │
-                └──────────────┘
-                        ↓
-                ┌──────────────┐
-                │Load Balancer │
-                └──────────────┘
-                   ↓         ↓
-            ┌────────┐  ┌────────┐
-            │ API    │  │ API    │
-            │Server 1│  │Server 2│
-            └────────┘  └────────┘
-                   ↓         ↓
-              ┌──────────────────┐
-              │  PostgreSQL      │
-              │  (Primary+Read)  │
-              └──────────────────┘
-                        ↓
-                ┌──────────────┐
-                │    Redis     │
-                │   (Cache)    │
-                └──────────────┘
-```
-
-**Recommended Platform:** Railway, Render, or Fly.io for FastAPI
-
----
-
-## 📊 Performance Benchmarks
-
-### **Current Performance** (Phase 3)
-
-| Endpoint | Average Response Time | Data Size |
-|----------|----------------------|-----------|
-| GET /countries | ~20ms | 5 records |
-| POST /debt/calculate | ~50ms | Calculations |
-| GET /precedents/similar | ~80ms | 5 comparisons |
-| GET /precedents/stats | ~30ms | Aggregations |
-
-**Database Queries:**
-- Simple lookups: 1-2 queries
-- Similarity search: 1 query + in-memory scoring
-- Statistics: 3-4 aggregation queries
-
-### **Optimization Opportunities** (Future)
-
-1. **Caching**: Cache country data (changes rarely)
-2. **Indexing**: Add indexes on frequently filtered fields
-3. **Query Optimization**: Use database-level similarity scoring
-4. **Connection Pooling**: Reuse database connections
-
----
-
-## 🛠️ Development Workflow
-
-### **Adding a New Feature**
-
-1. **Read Framework**: Check `api_design_integration_framework.md`
-2. **Design API**: Define endpoint, request/response models
-3. **Create Service**: Implement business logic in service layer
-4. **Create Router**: Add API endpoint
-5. **Test**: Validate in Swagger UI
-6. **Document**: Update README and ARCHITECTURE
-7. **Commit**: Git commit with descriptive message
-
-### **Example: Adding New Endpoint**
-```python
-# Step 1: Create service method
-# src/services/debt_calculator.py
-def calculate_infrastructure(self, debt_amount, unit_cost):
-    return {
-        "units": debt_amount / unit_cost
-    }
-
-# Step 2: Create Pydantic models
-# src/api/routers/debt.py
-class InfrastructureRequest(BaseModel):
-    debt_amount: float
-    unit_cost: float
-
-# Step 3: Create endpoint
-@router.post("/infrastructure")
-async def calculate_infrastructure(
-    request: InfrastructureRequest,
-    db: Session = Depends(get_db)
-):
-    service = DebtCalculatorService(db)
-    return service.calculate_infrastructure(...)
-```
-
----
-
-## 📝 Key Design Decisions
-
-### **Decision Log**
-
-| Decision | Rationale | Date |
-|----------|-----------|------|
-| FastAPI over Django | Better API performance, async support, auto docs | Nov 2025 |
-| PostgreSQL over MongoDB | ACID compliance, relational data fits better | Nov 2025 |
-| Service layer pattern | Testability, reusability, separation of concerns | Nov 2025 |
-| UUID primary keys | Distributed system support, no collisions | Nov 2025 |
-| Clean Code > Performance | MVP phase, <1000 users, maintainability priority | Nov 2025 |
-| POST for calculations | Non-idempotent operation, follows REST | Nov 2025 |
-| AI scoring in Python | Flexibility, easy to modify, performance adequate | Nov 2025 |
-
----
-
-## 🎯 Future Enhancements
-
-### **Phase 4: Real Data Integration**
-- IMF API integration
-- World Bank API integration
-- Paris Club web scraping
-- Automated weekly updates
-
-### **Phase 5: Testing & Quality**
-- Unit tests (pytest)
-- Integration tests
-- 80%+ code coverage
-- Performance benchmarks
-
-### **Phase 6: Production Deployment**
-- Security hardening
-- Authentication
-- Rate limiting
-- Monitoring (Sentry)
-- CI/CD pipeline
-
-### **Phase 7: Frontend (Optional)**
-- React dashboard
-- Data visualizations
-- Interactive maps
-- User authentication
-
----
-
-## 📚 Additional Documentation
-
-- **README.md** - Quick start and usage
-- **CHAT_HANDOFF.md** - Development continuation guide
-- **API Documentation** - Auto-generated at `/api/docs`
+- Unit tests for services
+- Integration tests for endpoints
+- 80%+ code coverage target
 
 ---
 
 ## 👥 For Developers
 
-### **Understanding the Codebase**
+### **Quick Start**
 
-**Start here:**
-1. `src/api/main.py` - Application entry point
-2. `src/models/debt_data.py` - Database schema
-3. `src/services/debt_calculator.py` - Business logic example
-4. `src/api/routers/debt.py` - API endpoint example
+```bash
+# Clone repository
+git clone https://github.com/AnneNgarachu/Borrowers-Forum.git
 
-**Common Tasks:**
+# Create virtual environment
+python -m venv venv
+.\venv\Scripts\Activate.ps1  # Windows
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Set up .env file
+cp .env.example .env
+# Edit .env with your DATABASE_URL
+
+# Run locally
+uvicorn src.api.main:app --reload
+
+# Open Swagger UI
+http://localhost:8000/api/docs
+```
+
+### **Deploy Changes**
+
+```bash
+git add .
+git commit -m "Your changes"
+git push origin main
+# Render auto-deploys from main branch
+```
+
+### **Common Tasks**
 
 **Add new endpoint:**
-1. Create service method
-2. Add router endpoint
+1. Create service method in `src/services/`
+2. Add router endpoint in `src/api/routers/`
 3. Test in Swagger UI
+4. Commit and push (auto-deploys)
 
 **Add database field:**
 1. Update model in `src/models/debt_data.py`
-2. Create Alembic migration (future)
+2. Recreate tables or use Alembic migration
 3. Update test data scripts
 
-**Modify calculation:**
-1. Update service in `src/services/`
-2. Keep API routes unchanged
-3. Service layer handles the change
+---
+
+## 📝 Key Design Decisions
+
+| Decision | Rationale | Date |
+|----------|-----------|------|
+| FastAPI over Django | Better API performance, async support, auto docs | Nov 2025 |
+| PostgreSQL over MongoDB | ACID compliance, relational data fits better | Nov 2025 |
+| Pydantic V1 over V2 | V2 requires Rust compilation (fails on free tiers) | Dec 2025 |
+| Python 3.11 over 3.13 | 3.13 incompatible with Pydantic V1 | Dec 2025 |
+| Render over Railway | Better build resources, successful deployment | Dec 2025 |
+| Service layer pattern | Testability, reusability, separation of concerns | Nov 2025 |
+| UUID primary keys | Distributed system support, no collisions | Nov 2025 |
 
 ---
 
-**Questions?** See README.md or CHAT_HANDOFF.md for more details.
+## 📚 Additional Documentation
+
+| Document | Purpose |
+|----------|---------|
+| `README.md` | Quick start and usage |
+| `CHAT_HANDOFF.md` | Development continuation guide |
+| `DEPLOYMENT_GUIDE.md` | Deployment configuration and troubleshooting |
+| `/api/docs` | Auto-generated Swagger UI |
 
 ---
 
-*Last Updated: November 29, 2025*  
-*Status: Phase 3 Complete - Production-ready API with Test Data*  
+*Last Updated: December 1, 2025*  
+*Status: 🟢 LIVE at https://borrowers-forum.onrender.com*  
 *Developer: Anne Ngarachu*

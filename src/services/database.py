@@ -7,7 +7,7 @@ Principle: Centralized database connection management with proper lifecycle
 Why: Prevents connection leaks, enables dependency injection, makes testing easy
 """
 
-from sqlalchemy import create_engine, event
+from sqlalchemy import create_engine, event, text
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.pool import StaticPool
 from contextlib import contextmanager
@@ -212,8 +212,8 @@ def check_database_health() -> dict:
     """
     try:
         with get_db_context() as db:
-            # Try a simple query
-            db.execute("SELECT 1")
+            # Try a simple query - FIXED: Using text() wrapper for SQLAlchemy 2.0
+            db.execute(text("SELECT 1"))
         
         settings = get_settings()
         db_type = "sqlite" if "sqlite" in settings.DATABASE_URL.lower() else "postgresql"
@@ -374,6 +374,7 @@ DATABASE SERVICE DESIGN DECISIONS:
    - Verify database connectivity
    - Used by monitoring systems
    - Returns structured response
+   - IMPORTANT: Uses text() wrapper for SQLAlchemy 2.0 compatibility
 
 HOW TO USE THIS SERVICE:
 
