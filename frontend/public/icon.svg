@@ -1,0 +1,10 @@
+<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="180" height="180" rx="37" fill="#1e40af"/>
+  <g transform="translate(30, 30)">
+    <circle cx="60" cy="60" r="50" stroke="white" stroke-width="6" fill="none"/>
+    <ellipse cx="60" cy="60" rx="20" ry="50" stroke="white" stroke-width="6" fill="none"/>
+    <line x1="10" y1="60" x2="110" y2="60" stroke="white" stroke-width="6"/>
+    <path d="M 18 35 Q 60 45 102 35" stroke="white" stroke-width="6" fill="none"/>
+    <path d="M 18 85 Q 60 75 102 85" stroke="white" stroke-width="6" fill="none"/>
+  </g>
+</svg>
