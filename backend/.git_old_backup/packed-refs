@@ -1,5 +1,0 @@
-# pack-refs with: peeled fully-peeled sorted 
-5f5525635966a3cd7e97f53757c24ddee7e8e00b refs/heads/backup-before-cleanup
-5f5525635966a3cd7e97f53757c24ddee7e8e00b refs/heads/main
-5f5525635966a3cd7e97f53757c24ddee7e8e00b refs/remotes/origin/backup-before-cleanup
-5f5525635966a3cd7e97f53757c24ddee7e8e00b refs/remotes/origin/main
