@@ -67,3 +67,12 @@ outputs/*.xlsx
 # Temporary
 *.tmp
 *.swp
+# Frontend
+frontend/node_modules
+frontend/dist
+
+# Backend
+backend/venv
+backend/.env
+backend/__pycache__
+backend/.pytest_cache
