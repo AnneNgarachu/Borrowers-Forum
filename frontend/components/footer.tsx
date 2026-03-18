@@ -3,14 +3,14 @@ import { Globe, Github, FileText, Scale } from "lucide-react"
 
 export function Footer() {
   return (
-    <footer className="border-t border-border/40 bg-slate-50 mt-16">
+    <footer className="border-t border-[#1e3a5f]/10 bg-slate-50 mt-16">
       <div className="container mx-auto px-4 py-8">
         <div className="grid md:grid-cols-3 gap-8">
           {/* Branding */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Globe className="h-5 w-5 text-[#1e3a5f]" />
-              <h3 className="font-bold text-lg text-[#1e3a5f]">The Borrower's Forum Platform</h3>
+              <h3 className="font-bold text-lg text-[#1e3a5f]">The Borrower&apos;s Forum</h3>
             </div>
             <p className="text-sm text-muted-foreground">
               Data-driven debt intelligence for developing nations making strategic fiscal decisions.
@@ -35,7 +35,7 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-2">
                 <div className="w-1 h-1 rounded-full bg-[#f59e0b]" />
-                UN Climate Vulnerability Index
+                ND-GAIN Climate Vulnerability Index
               </li>
             </ul>
           </div>
@@ -70,7 +70,7 @@ export function Footer() {
                   className="text-muted-foreground hover:text-[#1e3a5f] transition-colors flex items-center gap-2"
                 >
                   <Scale className="h-3.5 w-3.5" />
-                  Legal & Disclaimer
+                  Legal &amp; Disclaimer
                 </Link>
               </li>
             </ul>
@@ -78,7 +78,7 @@ export function Footer() {
         </div>
 
         {/* Data Disclaimer */}
-        <div className="border-t border-border/40 mt-8 pt-6">
+        <div className="border-t border-[#1e3a5f]/10 mt-8 pt-6">
           <div className="mb-4 text-xs text-slate-500 leading-relaxed">
             <strong className="text-slate-600">Data Disclaimer:</strong> All restructuring data is compiled from
             official sources including Paris Club press releases, IMF staff reports, and World Bank publications.
@@ -86,19 +86,17 @@ export function Footer() {
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
             <div className="flex flex-col sm:flex-row items-center gap-2">
-              <p>© {new Date().getFullYear()} The Borrower's Forum Platform</p>
-              <span className="hidden sm:inline text-slate-400">•</span>
+              <p>&copy; {new Date().getFullYear()} The Borrower&apos;s Forum Platform</p>
+              <span className="hidden sm:inline text-slate-400">&bull;</span>
               <p className="text-slate-500">Open Source Project</p>
-              <span className="hidden sm:inline text-slate-400">•</span>
-              <p className="text-slate-500">Database last updated: December 2024</p>
             </div>
             <p className="text-slate-600">
-              Prototype developed by{" "}
+              Developed by{" "}
               <a
                 href="https://annengarachu.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-semibold text-[#1e3a5f] hover:text-blue-700 transition-colors underline decoration-dotted"
+                className="font-semibold text-[#1e3a5f] hover:text-[#2d5a8e] transition-colors underline decoration-dotted"
               >
                 Anne Ngarachu
               </a>
