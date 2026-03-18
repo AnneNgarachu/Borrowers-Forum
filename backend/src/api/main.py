@@ -274,6 +274,7 @@ from src.api.routers.debt import router as debt_router
 from src.api.routers.precedents import router as precedents_router
 from src.api.routers.admin import router as admin_router
 from src.api.routers.live_data import router as live_data_router
+from src.api.routers.ai import router as ai_router
 
 
 
@@ -284,6 +285,7 @@ app.include_router(debt_router, prefix=settings.API_V1_PREFIX, tags=["Debt Calcu
 app.include_router(precedents_router, prefix=settings.API_V1_PREFIX, tags=["Precedents Search"])
 app.include_router(admin_router, prefix=settings.API_V1_PREFIX, tags=["Admin - API Key Management"])
 app.include_router(live_data_router, prefix=settings.API_V1_PREFIX, tags=["Live Data"])
+app.include_router(ai_router, prefix=settings.API_V1_PREFIX, tags=["AI Strategy"])
 
 
 

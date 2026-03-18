@@ -318,6 +318,47 @@ export async function findSimilarPrecedentsAction(params: SimilarPrecedentsParam
   }
 }
 
+export interface StrategyBriefRequest {
+  country_code: string
+  debt_amount_usd: number
+  relief_percent: number
+}
+
+export interface StrategyBriefResponse {
+  country: {
+    code: string
+    name: string
+    region: string
+    income_level: string
+    climate_vulnerability_score: number
+  }
+  parameters: {
+    debt_amount_usd: number
+    relief_percent: number
+    potential_savings_usd: number
+  }
+  brief: string
+  precedents_used: number
+  climate_precedents_used: number
+}
+
+export async function generateStrategyBriefAction(
+  request: StrategyBriefRequest
+): Promise<StrategyBriefResponse> {
+  const url = `${API_BASE_URL}/api/v1/ai/strategy-brief`
+
+  const data = await fetchWithAuth(url, {
+    method: "POST",
+    body: JSON.stringify(request),
+  })
+
+  if (data && typeof data === "object" && "error" in data) {
+    throw new Error(data.message || "Failed to generate strategy brief")
+  }
+
+  return data
+}
+
 export async function getPrecedentStatsAction(): Promise<PrecedentStats> {
   try {
     const data = await fetchWithAuth(`${API_BASE_URL}/api/v1/precedents/stats`)

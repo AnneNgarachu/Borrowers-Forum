@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { type DebtCalculationResponse, calculateDebtAction as calculateDebtRelief } from "@/lib/api-actions"
 import { Slider } from "@/components/ui/slider"
+import { StrategyBrief } from "@/components/strategy-brief"
 
 const countries = [
   { code: "ARG", name: "Argentina", flag: "🇦🇷", region: "Latin America & Caribbean" },
@@ -616,6 +617,15 @@ export function DebtCalculator() {
                 })}
               </div>
             </div>
+
+            {/* AI Strategy Brief */}
+            <StrategyBrief
+              countryCode={result.countryCode}
+              countryName={result.country}
+              countryFlag={result.flag}
+              debtAmount={result.debtAmount}
+              reliefPercent={result.reliefPercent}
+            />
           </div>
         )}
       </div>

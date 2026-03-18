@@ -151,6 +151,7 @@ class Settings(BaseSettings):
     # ============================================
     IMF_API_KEY: Optional[str] = None
     WORLD_BANK_API_KEY: Optional[str] = None
+    ANTHROPIC_API_KEY: Optional[str] = None
     
     # ============================================
     # FEATURE FLAGS
