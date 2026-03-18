@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { Calculator, TrendingDown, Info, Activity, Leaf, Users, School } from "lucide-react"
+import { Calculator, TrendingDown, Info, Activity, Leaf, Users, School, Globe, Search, Sparkles } from "lucide-react"
+import Link from "next/link"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { type DebtCalculationResponse, calculateDebtAction as calculateDebtRelief } from "@/lib/api-actions"
@@ -628,6 +629,48 @@ export function DebtCalculator() {
               debtAmount={result.debtAmount}
               reliefPercent={result.reliefPercent}
             />
+
+            {/* What's Next - guided loop */}
+            <Card className="border border-dashed border-slate-300 bg-slate-50/50">
+              <CardContent className="py-6">
+                <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 text-center">What&apos;s next?</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <Link href="/countries" className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 bg-white hover:border-[#f59e0b]/40 hover:bg-[#f59e0b]/5 transition-colors group">
+                    <div className="w-8 h-8 rounded-md gradient-gold flex items-center justify-center flex-shrink-0">
+                      <Globe className="h-4 w-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-slate-700 group-hover:text-[#b87a00]">Explore similar countries</p>
+                      <p className="text-xs text-slate-400">Compare profiles</p>
+                    </div>
+                  </Link>
+                  <Link href="/precedents" className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 bg-white hover:border-teal-400/40 hover:bg-teal-50 transition-colors group">
+                    <div className="w-8 h-8 rounded-md bg-gradient-to-br from-teal-600 to-teal-500 flex items-center justify-center flex-shrink-0">
+                      <Search className="h-4 w-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-slate-700 group-hover:text-teal-700">Find comparable precedents</p>
+                      <p className="text-xs text-slate-400">Search 20 cases</p>
+                    </div>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      const chatBtn = document.querySelector('[aria-label="Open AI Advisor chat"]') as HTMLButtonElement
+                      if (chatBtn) chatBtn.click()
+                    }}
+                    className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 bg-white hover:border-[#1e3a5f]/30 hover:bg-[#1e3a5f]/5 transition-colors group text-left"
+                  >
+                    <div className="w-8 h-8 rounded-md gradient-navy flex items-center justify-center flex-shrink-0">
+                      <Sparkles className="h-4 w-4 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-slate-700 group-hover:text-[#1e3a5f]">Ask the AI Advisor</p>
+                      <p className="text-xs text-slate-400">Get expert guidance</p>
+                    </div>
+                  </button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
       </div>

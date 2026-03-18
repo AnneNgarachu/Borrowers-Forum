@@ -30,19 +30,19 @@ export default function HomePage() {
             data from IMF, World Bank, and Paris Club sources.
           </p>
           <div className="flex flex-wrap gap-4 justify-center pt-4">
-            <Link href="/calculator">
+            <Link href="/countries">
               <Button
                 size="lg"
-                className="gradient-navy hover:opacity-90 text-white shadow-lg shadow-[#1e3a5f]/30"
+                className="gradient-gold hover:opacity-90 text-white shadow-lg shadow-[#f59e0b]/30"
               >
-                <Calculator className="mr-2 h-5 w-5" />
-                Calculate Debt Impact
+                <Globe className="mr-2 h-5 w-5" />
+                Explore Countries
               </Button>
             </Link>
             <Link href="/precedents">
               <Button size="lg" variant="outline" className="border-2 border-[#1e3a5f]/20 hover:bg-[#1e3a5f]/5 bg-transparent text-[#1e3a5f]">
                 <Search className="mr-2 h-5 w-5" />
-                Explore Precedents
+                Search Precedents
               </Button>
             </Link>
           </div>
@@ -102,47 +102,45 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Debt Calculator - Navy */}
+            {/* 1. Country Profiles - Gold/Amber (Understand your situation) */}
             <Card className="bg-white/80 backdrop-blur border-slate-200 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1">
               <CardHeader>
-                <div className="w-12 h-12 rounded-lg gradient-navy flex items-center justify-center mb-4 shadow-lg shadow-[#1e3a5f]/30">
-                  <Calculator className="h-6 w-6 text-white" />
+                <div className="w-12 h-12 rounded-lg gradient-gold flex items-center justify-center mb-4 shadow-lg shadow-[#f59e0b]/30">
+                  <Globe className="h-6 w-6 text-white" />
                 </div>
-                <CardTitle className="text-xl">Debt Relief Impact Calculator</CardTitle>
-                <CardDescription className="text-slate-600">
-                  Convert debt service savings into tangible outcomes
-                </CardDescription>
+                <CardTitle className="text-xl">Country Profiles</CardTitle>
+                <CardDescription className="text-slate-600">Understand your country&apos;s debt position</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2 text-sm text-slate-600">
                 <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f] mt-1.5" />
-                  <span>Healthcare: Doctors employed for 1 or 5 years</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#f59e0b] mt-1.5" />
+                  <span>World Bank economic indicators</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f] mt-1.5" />
-                  <span>Education: Schools that could be built</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#f59e0b] mt-1.5" />
+                  <span>Climate vulnerability scoring (ND-GAIN)</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f] mt-1.5" />
-                  <span>Climate: % of annual adaptation budget</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#f59e0b] mt-1.5" />
+                  <span>23 debt-stressed countries covered</span>
                 </div>
-                <Link href="/calculator">
-                  <Button className="w-full mt-4 gradient-navy hover:opacity-90 text-white">
-                    Start Calculating
+                <Link href="/countries">
+                  <Button className="w-full mt-4 gradient-gold hover:opacity-90 text-white">
+                    View Countries
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
               </CardContent>
             </Card>
 
-            {/* Precedents Search - Teal */}
+            {/* 2. Precedents Search - Teal (Find comparable cases) */}
             <Card className="bg-white/80 backdrop-blur border-slate-200 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1">
               <CardHeader>
                 <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-teal-600 to-teal-500 flex items-center justify-center mb-4 shadow-lg shadow-teal-500/30">
                   <Search className="h-6 w-6 text-white" />
                 </div>
                 <CardTitle className="text-xl">Verified Precedents</CardTitle>
-                <CardDescription className="text-slate-600">Search 20 historical restructuring cases</CardDescription>
+                <CardDescription className="text-slate-600">Find comparable restructuring cases</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2 text-sm text-slate-600">
                 <div className="flex items-start gap-2">
@@ -166,31 +164,33 @@ export default function HomePage() {
               </CardContent>
             </Card>
 
-            {/* Country Profiles - Gold/Amber */}
+            {/* 3. Debt Calculator - Navy (Quantify impact) */}
             <Card className="bg-white/80 backdrop-blur border-slate-200 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1">
               <CardHeader>
-                <div className="w-12 h-12 rounded-lg gradient-gold flex items-center justify-center mb-4 shadow-lg shadow-[#f59e0b]/30">
-                  <Globe className="h-6 w-6 text-white" />
+                <div className="w-12 h-12 rounded-lg gradient-navy flex items-center justify-center mb-4 shadow-lg shadow-[#1e3a5f]/30">
+                  <Calculator className="h-6 w-6 text-white" />
                 </div>
-                <CardTitle className="text-xl">Country Profiles</CardTitle>
-                <CardDescription className="text-slate-600">Economic and climate vulnerability data</CardDescription>
+                <CardTitle className="text-xl">Debt Relief Impact Calculator</CardTitle>
+                <CardDescription className="text-slate-600">
+                  Quantify what debt relief could unlock
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-2 text-sm text-slate-600">
                 <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#f59e0b] mt-1.5" />
-                  <span>World Bank economic indicators</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f] mt-1.5" />
+                  <span>Healthcare: Doctors employed for 1 or 5 years</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#f59e0b] mt-1.5" />
-                  <span>Climate vulnerability scoring (ND-GAIN)</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f] mt-1.5" />
+                  <span>Education: Schools that could be built</span>
                 </div>
                 <div className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#f59e0b] mt-1.5" />
-                  <span>23 debt-stressed countries covered</span>
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f] mt-1.5" />
+                  <span>Climate: % of annual adaptation budget</span>
                 </div>
-                <Link href="/countries">
-                  <Button className="w-full mt-4 gradient-gold hover:opacity-90 text-white">
-                    View Countries
+                <Link href="/calculator">
+                  <Button className="w-full mt-4 gradient-navy hover:opacity-90 text-white">
+                    Start Calculating
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
@@ -205,26 +205,16 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto">
           <Card className="gradient-navy border-0 text-white shadow-2xl shadow-[#1e3a5f]/30">
             <CardHeader className="text-center pb-6">
-              <CardTitle className="text-3xl md:text-4xl font-bold mb-4">Ready to Explore Your Options?</CardTitle>
+              <CardTitle className="text-3xl md:text-4xl font-bold mb-4">Ready to Build Your Strategy?</CardTitle>
               <CardDescription className="text-slate-200 text-lg">
-                Start analyzing debt relief scenarios and discover what your country could gain
+                Calculate your country&apos;s potential savings and generate an AI-powered negotiation brief
               </CardDescription>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-4 justify-center">
               <Link href="/calculator">
                 <Button size="lg" className="bg-white text-[#1e3a5f] hover:bg-slate-100 shadow-lg font-semibold">
                   <Calculator className="mr-2 h-5 w-5" />
-                  Calculate Your Country's Potential
-                </Button>
-              </Link>
-              <Link href="/countries">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-2 border-white text-white hover:bg-white/10 bg-transparent"
-                >
-                  <Globe className="mr-2 h-5 w-5" />
-                  View Country Profiles
+                  Open the Calculator
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
