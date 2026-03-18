@@ -243,7 +243,7 @@ export function DebtCalculator() {
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 text-balance">
             What Could Your Country{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-blue-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#1e3a5f] to-[#2d5a8e] bg-clip-text text-transparent">
               Gain from Debt Relief?
             </span>
           </h1>
@@ -388,7 +388,7 @@ export function DebtCalculator() {
                 onClick={calculateImpact}
                 disabled={!selectedCountry || !debtAmount || isCalculating}
                 size="lg"
-                className="flex-1 gradient-blue hover:gradient-blue-hover text-white h-14 text-base font-semibold shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
+                className="flex-1 gradient-navy hover:opacity-90 text-white h-14 text-base font-semibold shadow-lg hover:shadow-xl transition-all disabled:opacity-50"
               >
                 {isCalculating ? (
                   <>
@@ -532,11 +532,11 @@ export function DebtCalculator() {
                   </CardHeader>
                   <CardContent className="py-8">
                     <div className="text-center space-y-3">
-                      <div className="inline-flex p-4 rounded-full bg-blue-500/10 text-blue-600 group-hover:scale-110 transition-transform">
+                      <div className="inline-flex p-4 rounded-full bg-[#1e3a5f]/10 text-[#1e3a5f] group-hover:scale-110 transition-transform">
                         <Users className="h-8 w-8" />
                       </div>
                       <div>
-                        <p className="text-4xl font-bold text-blue-600">{result.doctorsEquivalent.toLocaleString()}</p>
+                        <p className="text-4xl font-bold text-[#1e3a5f]">{result.doctorsEquivalent.toLocaleString()}</p>
                         <p className="text-xs text-slate-500 mt-2">Source: WHO salary data</p>
                       </div>
                     </div>
@@ -586,7 +586,7 @@ export function DebtCalculator() {
             <div>
               <h3 className="text-2xl font-bold mb-4 flex items-center gap-2 text-slate-900">
                 <span>Compare Scenarios</span>
-                <div className="h-1 flex-1 bg-gradient-to-r from-blue-600 to-transparent rounded" />
+                <div className="h-1 flex-1 bg-gradient-to-r from-[#1e3a5f] to-transparent rounded" />
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                 {presetReliefs.map((percent) => {
@@ -625,7 +625,7 @@ export function DebtCalculator() {
             <CardContent className="p-8">
               <div className="text-center space-y-6">
                 <div className="relative">
-                  <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center animate-pulse">
+                  <div className="w-20 h-20 mx-auto rounded-full gradient-navy flex items-center justify-center animate-pulse">
                     <Calculator className="w-10 h-10 text-white" />
                   </div>
                 </div>
@@ -634,7 +634,7 @@ export function DebtCalculator() {
                   <p className="text-lg font-semibold">{calculatingMessage}</p>
                   <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-300 ease-out"
+                      className="h-full gradient-navy transition-all duration-300 ease-out"
                       style={{ width: `${calculatingProgress}%` }}
                     />
                   </div>

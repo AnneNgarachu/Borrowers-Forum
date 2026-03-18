@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Globe, Github, FileText, Scale } from "lucide-react"
+import { Globe, Github, Scale } from "lucide-react"
 
 export function Footer() {
   return (
@@ -44,15 +44,6 @@ export function Footer() {
           <div className="space-y-3">
             <h4 className="font-semibold text-sm text-slate-900">Resources</h4>
             <ul className="space-y-2 text-sm">
-              <li>
-                <Link
-                  href="/api-docs"
-                  className="text-muted-foreground hover:text-[#1e3a5f] transition-colors flex items-center gap-2"
-                >
-                  <FileText className="h-3.5 w-3.5" />
-                  API Documentation
-                </Link>
-              </li>
               <li>
                 <Link
                   href="https://github.com/AnneNgarachu/Borrowers-Forum"

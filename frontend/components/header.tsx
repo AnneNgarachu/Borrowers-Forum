@@ -11,6 +11,7 @@ export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   const navItems = [
+    { href: "/", label: "Home" },
     { href: "/calculator", label: "Calculator" },
     { href: "/precedents", label: "Precedents" },
     { href: "/countries", label: "Countries" },
