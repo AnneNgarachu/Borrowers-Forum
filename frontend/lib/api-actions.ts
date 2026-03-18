@@ -344,19 +344,29 @@ export interface StrategyBriefResponse {
 
 export async function generateStrategyBriefAction(
   request: StrategyBriefRequest
-): Promise<StrategyBriefResponse> {
-  const url = `${API_BASE_URL}/api/v1/ai/strategy-brief`
+): Promise<{ data?: StrategyBriefResponse; error?: string }> {
+  try {
+    const url = `${API_BASE_URL}/api/v1/ai/strategy-brief`
 
-  const data = await fetchWithAuth(url, {
-    method: "POST",
-    body: JSON.stringify(request),
-  })
+    console.log("[AI Brief] Requesting strategy brief for:", request.country_code)
 
-  if (data && typeof data === "object" && "error" in data) {
-    throw new Error(data.message || "Failed to generate strategy brief")
+    const data = await fetchWithAuth(url, {
+      method: "POST",
+      body: JSON.stringify(request),
+    })
+
+    console.log("[AI Brief] Response received:", typeof data, data?.error ? "ERROR" : "OK")
+
+    if (data && typeof data === "object" && "error" in data) {
+      const detail = typeof data.message === "string" ? data.message : JSON.stringify(data.message)
+      return { error: detail || "Backend returned an error" }
+    }
+
+    return { data }
+  } catch (err) {
+    console.error("[AI Brief] Unexpected error:", err)
+    return { error: err instanceof Error ? err.message : "Unexpected error generating brief" }
   }
-
-  return data
 }
 
 export async function getPrecedentStatsAction(): Promise<PrecedentStats> {

@@ -29,18 +29,21 @@ export function StrategyBrief({
     setIsGenerating(true)
     setError(null)
 
-    try {
-      const result = await generateStrategyBriefAction({
-        country_code: countryCode,
-        debt_amount_usd: debtAmount,
-        relief_percent: reliefPercent,
-      })
-      setBrief(result)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to generate strategy brief")
-    } finally {
-      setIsGenerating(false)
+    const result = await generateStrategyBriefAction({
+      country_code: countryCode,
+      debt_amount_usd: debtAmount,
+      relief_percent: reliefPercent,
+    })
+
+    if (result.error) {
+      setError(result.error)
+    } else if (result.data) {
+      setBrief(result.data)
+    } else {
+      setError("No data returned from AI service")
     }
+
+    setIsGenerating(false)
   }
 
   const handleDownloadPDF = () => {
