@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Sparkles, Download, Loader2, AlertCircle, FileText } from "lucide-react"
 import { generateStrategyBriefAction, type StrategyBriefResponse } from "@/lib/api-actions"
+import { playCompletionSound } from "@/lib/sounds"
 
 interface StrategyBriefProps {
   countryCode: string
@@ -39,6 +40,7 @@ export function StrategyBrief({
       setError(result.error)
     } else if (result.data) {
       setBrief(result.data)
+      playCompletionSound()
     } else {
       setError("No data returned from AI service")
     }

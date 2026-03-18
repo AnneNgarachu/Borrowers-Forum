@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { MessageCircle, X, Send, Loader2, Sparkles } from "lucide-react"
 import { chatAction, type ChatMessage } from "@/lib/api-actions"
+import { playCompletionSound } from "@/lib/sounds"
 
 export function AIChat() {
   const [isOpen, setIsOpen] = useState(false)
@@ -37,6 +38,7 @@ export function AIChat() {
 
     if (result.data) {
       setMessages([...updatedMessages, { role: "assistant", content: result.data.reply }])
+      playCompletionSound()
     } else {
       setMessages([...updatedMessages, { role: "assistant", content: `Sorry, I couldn't process that: ${result.error}` }])
     }

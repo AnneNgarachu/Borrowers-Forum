@@ -13,6 +13,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { type DebtCalculationResponse, calculateDebtAction as calculateDebtRelief } from "@/lib/api-actions"
 import { Slider } from "@/components/ui/slider"
 import { StrategyBrief } from "@/components/strategy-brief"
+import { playCompletionSound } from "@/lib/sounds"
 
 const countries = [
   { code: "ARG", name: "Argentina", flag: "🇦🇷", region: "Latin America & Caribbean" },
@@ -162,6 +163,7 @@ export function DebtCalculator() {
       setCalculatingProgress(100)
       setCalculatingMessage("🎉 Calculation complete!")
       setShowConfetti(true)
+      playCompletionSound()
 
       setTimeout(() => {
         setResult(newResult)
