@@ -369,6 +369,37 @@ export async function generateStrategyBriefAction(
   }
 }
 
+export interface ChatMessage {
+  role: "user" | "assistant"
+  content: string
+}
+
+export interface ChatResponse {
+  reply: string
+  sources_consulted: number
+}
+
+export async function chatAction(
+  message: string,
+  history: ChatMessage[] = []
+): Promise<{ data?: ChatResponse; error?: string }> {
+  try {
+    const url = `${API_BASE_URL}/api/v1/ai/chat`
+    const data = await fetchWithAuth(url, {
+      method: "POST",
+      body: JSON.stringify({ message, history }),
+    })
+
+    if (data && typeof data === "object" && "error" in data) {
+      return { error: data.message || "Chat request failed" }
+    }
+
+    return { data }
+  } catch (err) {
+    return { error: err instanceof Error ? err.message : "Unexpected error" }
+  }
+}
+
 export async function getPrecedentStatsAction(): Promise<PrecedentStats> {
   try {
     const data = await fetchWithAuth(`${API_BASE_URL}/api/v1/precedents/stats`)
