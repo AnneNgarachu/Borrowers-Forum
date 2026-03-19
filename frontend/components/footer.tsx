@@ -1,5 +1,6 @@
+import Image from "next/image"
 import Link from "next/link"
-import { Globe, Github, Scale } from "lucide-react"
+import { Github, Scale } from "lucide-react"
 
 export function Footer() {
   return (
@@ -9,7 +10,7 @@ export function Footer() {
           {/* Branding */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <Globe className="h-5 w-5 text-[#1e3a5f]" />
+              <Image src="/icon.svg" alt="Borrower's Forum logo" width={28} height={28} className="rounded" />
               <h3 className="font-bold text-lg text-[#1e3a5f]">The Borrower&apos;s Forum</h3>
             </div>
             <p className="text-sm text-muted-foreground">

@@ -1,6 +1,7 @@
 "use client"
 
-import { Globe, Menu, X } from "lucide-react"
+import Image from "next/image"
+import { Menu, X } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
@@ -24,9 +25,7 @@ export function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity group">
-            <div className="bg-[#1e3a5f]/10 p-2 rounded-lg backdrop-blur-sm border border-[#1e3a5f]/20 group-hover:bg-[#1e3a5f]/15 transition-colors">
-              <Globe className="h-6 w-6 text-[#1e3a5f]" />
-            </div>
+            <Image src="/icon.svg" alt="Borrower's Forum logo" width={40} height={40} className="rounded-lg" />
             <div>
               <h1 className="text-xl font-bold tracking-tight text-[#1e3a5f]">The Borrower&apos;s Forum</h1>
               <p className="text-xs text-slate-500">Debt Intelligence Platform</p>
