@@ -14,7 +14,10 @@ export const metadata: Metadata = {
     "Empowering debt-stressed countries with data-driven insights to analyze restructuring options and unlock resources for development.",
   generator: "v0.app",
   icons: {
-    icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon-dark-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
   },
 }
 
