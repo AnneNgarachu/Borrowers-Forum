@@ -253,12 +253,16 @@ async def find_similar_precedents(
         ge=1,
         le=50
     ),
+    exclude_same_country: bool = Query(
+        False,
+        description="Exclude the queried country's own precedents from results"
+    ),
     db: Session = Depends(get_db),
     api_key: APIKey = Depends(require_api_key)  # 🔒 Protected
 ):
     """
     Find similar precedents using AI-powered similarity matching.
-    
+
     Requires: Valid API key with read permission.
     """
     try:
@@ -266,7 +270,8 @@ async def find_similar_precedents(
         result = service.find_similar_precedents(
             country_code=country_code.upper(),
             debt_amount_millions=debt_amount_millions,
-            limit=limit
+            limit=limit,
+            exclude_same_country=exclude_same_country
         )
         return result
     

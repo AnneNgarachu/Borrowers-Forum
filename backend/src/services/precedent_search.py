@@ -168,24 +168,26 @@ class PrecedentSearchService:
         self,
         country_code: str,
         debt_amount_millions: float,
-        limit: int = 10
+        limit: int = 10,
+        exclude_same_country: bool = False
     ) -> Dict:
         """
         Find precedents similar to a given country and debt situation.
-        
+
         Uses similarity scoring based on:
         - Country characteristics (region, income level, climate vulnerability)
         - Debt amount (within similar range)
         - Recency (prefer more recent cases)
-        
+
         Args:
             country_code: ISO 3-letter country code
             debt_amount_millions: Debt amount in millions USD
             limit: Maximum number of results
-        
+            exclude_same_country: If True, omit the queried country's own precedents
+
         Returns:
             Dictionary with ranked similar precedents
-        
+
         Raises:
             PrecedentSearchError: If country not found
         """
@@ -193,20 +195,23 @@ class PrecedentSearchService:
         country = self.db.execute(
             select(Country).where(Country.code == country_code.upper())
         ).scalar_one_or_none()
-        
+
         if not country:
             raise PrecedentSearchError(f"Country with code '{country_code}' not found")
-        
+
         # Get all precedents with their countries
         query = select(Precedent, Country).join(
             Country, Precedent.country_id == Country.id
         )
-        
+
+        if exclude_same_country:
+            query = query.where(Country.id != country.id)
+
         results = self.db.execute(query).all()
-        
+
         # Score each precedent for similarity
         scored_precedents = []
-        
+
         for precedent, prec_country in results:
             score = self._calculate_similarity_score(
                 reference_country=country,
@@ -308,25 +313,33 @@ class PrecedentSearchService:
         # Climate vulnerability similarity (15 points)
         if reference_country.climate_vulnerability_score and precedent_country.climate_vulnerability_score:
             diff = abs(reference_country.climate_vulnerability_score - precedent_country.climate_vulnerability_score)
-            # Full points if within 10 points, scaled down beyond that
-            similarity = max(0, 15 - (diff / 10 * 15))
+            # Full points if identical, linear decay to 0 at 25-point difference
+            similarity = max(0, 15 - (diff / 25 * 15))
             score += similarity
         
         # Debt amount similarity (20 points)
         # Consider similar if within 50% of reference amount
-        debt_ratio = precedent.debt_amount_millions / reference_debt_amount
-        if 0.5 <= debt_ratio <= 2.0:
-            # Full points at 1:1 ratio, scaled down as ratio deviates
-            deviation = abs(1.0 - debt_ratio)
-            similarity = max(0, 20 - (deviation * 40))
-            score += similarity
+        if reference_debt_amount and reference_debt_amount > 0:
+            debt_ratio = precedent.debt_amount_millions / reference_debt_amount
+            if 0.5 <= debt_ratio <= 2.0:
+                # Full points at 1:1 ratio, scaled down as ratio deviates
+                deviation = abs(1.0 - debt_ratio)
+                similarity = max(0, 20 - (deviation * 40))
+                score += similarity
         
         # Recency (10 points)
-        # More recent cases are more relevant
+        # Sovereign debt precedents stay relevant for decades.
+        # 0-5 yrs: full 10 pts | 5-10 yrs: 10→5 | 10-20 yrs: 5→0 | 20+: 0
         current_year = datetime.now().year
         years_ago = current_year - precedent.year
-        # Full points if within 5 years, scaled down for older cases
-        recency_score = max(0, 10 - (years_ago / 5 * 10))
+        if years_ago <= 5:
+            recency_score = 10
+        elif years_ago <= 10:
+            recency_score = 10 - (years_ago - 5) * (5 / 5)   # 10 → 5
+        elif years_ago <= 20:
+            recency_score = 5 - (years_ago - 10) * (5 / 10)  # 5 → 0
+        else:
+            recency_score = 0
         score += recency_score
         
         return min(100, score)  # Cap at 100
@@ -343,7 +356,7 @@ class PrecedentSearchService:
             "regional_match": reference_country.region == precedent_country.region,
             "income_level_match": reference_country.income_level == precedent_country.income_level,
             "climate_vulnerability_similarity": None,
-            "debt_amount_ratio": round(precedent.debt_amount_millions / reference_debt_amount, 2),
+            "debt_amount_ratio": round(precedent.debt_amount_millions / reference_debt_amount, 2) if reference_debt_amount and reference_debt_amount > 0 else None,
             "years_ago": datetime.now().year - precedent.year
         }
         
