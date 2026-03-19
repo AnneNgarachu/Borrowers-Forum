@@ -25,7 +25,7 @@ export function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity group">
-            <Image src="/icon.svg" alt="Borrower's Forum logo" width={40} height={40} className="rounded-lg" />
+            <Image src="/icon.svg" alt="Borrower's Forum logo" width={48} height={48} className="rounded-lg" />
             <div>
               <h1 className="text-xl font-bold tracking-tight text-[#1e3a5f]">The Borrower&apos;s Forum</h1>
               <p className="text-xs text-slate-500">Debt Intelligence Platform</p>

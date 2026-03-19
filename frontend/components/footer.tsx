@@ -10,7 +10,7 @@ export function Footer() {
           {/* Branding */}
           <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <Image src="/icon.svg" alt="Borrower's Forum logo" width={28} height={28} className="rounded" />
+              <Image src="/icon.svg" alt="Borrower's Forum logo" width={36} height={36} className="rounded" />
               <h3 className="font-bold text-lg text-[#1e3a5f]">The Borrower&apos;s Forum</h3>
             </div>
             <p className="text-sm text-muted-foreground">
