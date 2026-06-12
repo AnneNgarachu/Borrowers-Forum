@@ -274,7 +274,7 @@ export function StrategyBrief({
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="inline-block px-3 py-1 bg-white/15 rounded text-[10px] font-semibold text-white/80 uppercase tracking-wider mb-3">
-                Confidential &mdash; Strategy Brief
+                Confidential | Strategy Brief
               </div>
               <h3 className="text-xl md:text-2xl font-bold text-white">
                 {countryFlag} Negotiation Strategy: {brief!.country.name}
