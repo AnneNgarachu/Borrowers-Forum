@@ -2,7 +2,7 @@
 
 **Open-source debt intelligence platform helping debt-stressed countries make informed restructuring decisions.**
 
-Creditors coordinate. Debtors don't. Since 1956, creditor nations have organized through the Paris Club, while debtor nations negotiate individually. This platform gives debtor nations shared intelligence to help close that gap, through data-driven debt analysis and historical precedent matching.
+Official creditors have coordinated through the Paris Club since 1956, while debtor nations face a fragmented landscape of bilateral, private, and multilateral lenders with no shared intelligence of their own. This platform helps close that gap, through data-driven debt analysis and historical precedent matching.
 
 [![Live Status](https://img.shields.io/badge/Status-🟢%20LIVE-success)](https://borrowers-forum.onrender.com)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/)

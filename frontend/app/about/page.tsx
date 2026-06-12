@@ -39,8 +39,9 @@ export default function AboutPage() {
           <CardContent className="space-y-4">
             <p className="text-slate-700 leading-relaxed">
               When countries need to restructure their debt, they often negotiate alone, without data on what terms
-              other countries achieved or tools to analyze their options. Meanwhile, the institutions they negotiate with
-              have had coordinated systems and shared intelligence since 1956.
+              other countries achieved or tools to analyze their options. Official creditors have coordinated through the
+              Paris Club since 1956, while debtor nations face a fragmented landscape of bilateral, private, and
+              multilateral lenders with no shared intelligence of their own.
             </p>
             <p className="text-slate-700 leading-relaxed font-medium">
               This platform helps level that playing field.
