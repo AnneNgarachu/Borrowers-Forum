@@ -238,7 +238,7 @@ export function DebtCalculator() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50 py-12 px-4">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50/30 to-slate-50 py-12 px-4">
       <div className="max-w-5xl mx-auto space-y-8">
         <div className="text-center space-y-4 mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-700 text-sm font-medium">
@@ -247,7 +247,7 @@ export function DebtCalculator() {
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-slate-900 text-balance">
             What Could Your Country{" "}
-            <span className="bg-gradient-to-r from-[#1e3a5f] to-[#2d5a8e] bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-[#1e3a5f] to-[#2d5a8e] bg-clip-text text-transparent">
               Gain from Debt Relief?
             </span>
           </h1>
@@ -493,7 +493,7 @@ export function DebtCalculator() {
             </Card>
 
             <Card className="gradient-gold text-white shadow-xl border-0 overflow-hidden relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent" />
               <CardContent className="py-10 relative">
                 <div className="text-center space-y-2">
                   <p className="text-lg font-medium text-white/90">
@@ -526,7 +526,7 @@ export function DebtCalculator() {
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
-                <div className="h-1 flex-1 bg-gradient-to-r from-amber-500 to-transparent rounded" />
+                <div className="h-1 flex-1 bg-linear-to-r from-amber-500 to-transparent rounded" />
               </div>
               <div className="grid md:grid-cols-3 gap-4">
                 <Card className="group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 border-slate-200 bg-white">
@@ -590,7 +590,7 @@ export function DebtCalculator() {
             <div>
               <h3 className="text-2xl font-bold mb-4 flex items-center gap-2 text-slate-900">
                 <span>Compare Scenarios</span>
-                <div className="h-1 flex-1 bg-gradient-to-r from-[#1e3a5f] to-transparent rounded" />
+                <div className="h-1 flex-1 bg-linear-to-r from-[#1e3a5f] to-transparent rounded" />
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                 {presetReliefs.map((percent) => {
@@ -636,7 +636,7 @@ export function DebtCalculator() {
                 <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4 text-center">What&apos;s next?</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   <Link href="/countries" className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 bg-white hover:border-[#f59e0b]/40 hover:bg-[#f59e0b]/5 transition-colors group">
-                    <div className="w-8 h-8 rounded-md gradient-gold flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-md gradient-gold flex items-center justify-center shrink-0">
                       <Globe className="h-4 w-4 text-white" />
                     </div>
                     <div>
@@ -645,7 +645,7 @@ export function DebtCalculator() {
                     </div>
                   </Link>
                   <Link href="/precedents" className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 bg-white hover:border-teal-400/40 hover:bg-teal-50 transition-colors group">
-                    <div className="w-8 h-8 rounded-md bg-gradient-to-br from-teal-600 to-teal-500 flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-md bg-linear-to-br from-teal-600 to-teal-500 flex items-center justify-center shrink-0">
                       <Search className="h-4 w-4 text-white" />
                     </div>
                     <div>
@@ -660,7 +660,7 @@ export function DebtCalculator() {
                     }}
                     className="flex items-center gap-3 p-3 rounded-lg border border-slate-200 bg-white hover:border-[#1e3a5f]/30 hover:bg-[#1e3a5f]/5 transition-colors group text-left"
                   >
-                    <div className="w-8 h-8 rounded-md gradient-navy flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-md gradient-navy flex items-center justify-center shrink-0">
                       <Sparkles className="h-4 w-4 text-white" />
                     </div>
                     <div>

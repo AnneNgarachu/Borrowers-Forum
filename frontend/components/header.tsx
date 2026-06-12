@@ -20,7 +20,7 @@ export function Header() {
   ]
 
   return (
-    <header className="border-b border-[#1e3a5f]/10 bg-gradient-to-r from-slate-50 via-blue-50/50 to-slate-50 sticky top-0 z-50 backdrop-blur-sm shadow-sm">
+    <header className="border-b border-[#1e3a5f]/10 bg-linear-to-r from-slate-50 via-blue-50/50 to-slate-50 sticky top-0 z-50 backdrop-blur-sm shadow-sm">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}

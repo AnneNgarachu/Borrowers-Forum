@@ -11,7 +11,7 @@ export default function ApiDocsPage() {
   const contactEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || "admin@borrowersforum.org"
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50/30 to-slate-50">
       <Header />
 
       <div className="container mx-auto px-4 py-12 max-w-6xl">
@@ -21,7 +21,7 @@ export default function ApiDocsPage() {
           <div className="flex items-center justify-center gap-3 mb-4">
             <h1 className="text-4xl md:text-5xl font-bold">
               API{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
                 Documentation
               </span>
             </h1>
@@ -43,7 +43,7 @@ export default function ApiDocsPage() {
             <a href="https://borrowers-forum.onrender.com/api/docs" target="_blank" rel="noopener noreferrer">
               <Button
                 size="lg"
-                className="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600"
+                className="bg-linear-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600"
               >
                 <ExternalLink className="mr-2 h-5 w-5" />
                 Interactive API Docs
@@ -80,7 +80,7 @@ export default function ApiDocsPage() {
         <div className="grid md:grid-cols-2 gap-8 mb-12">
           <Card className="bg-white/80 backdrop-blur">
             <CardHeader>
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-blue-400 flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-lg bg-linear-to-br from-blue-500 to-blue-400 flex items-center justify-center mb-4">
                 <Database className="h-6 w-6 text-white" />
               </div>
               <CardTitle>Base URL</CardTitle>
@@ -98,7 +98,7 @@ export default function ApiDocsPage() {
 
           <Card className="bg-white/80 backdrop-blur">
             <CardHeader>
-              <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-500 to-blue-400 flex items-center justify-center mb-4">
+              <div className="w-12 h-12 rounded-lg bg-linear-to-br from-blue-500 to-blue-400 flex items-center justify-center mb-4">
                 <Shield className="h-6 w-6 text-white" />
               </div>
               <CardTitle>Authentication</CardTitle>
@@ -275,7 +275,7 @@ export default function ApiDocsPage() {
         </Card>
 
         <div className="mt-12 grid md:grid-cols-3 gap-6">
-          <Card className="bg-gradient-to-br from-blue-50 to-white">
+          <Card className="bg-linear-to-br from-blue-50 to-white">
             <CardHeader>
               <Book className="h-8 w-8 text-blue-600 mb-2" />
               <CardTitle className="text-lg">Full Documentation</CardTitle>
@@ -293,7 +293,7 @@ export default function ApiDocsPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-blue-50 to-white">
+          <Card className="bg-linear-to-br from-blue-50 to-white">
             <CardHeader>
               <Database className="h-8 w-8 text-blue-600 mb-2" />
               <CardTitle className="text-lg">Data Sources</CardTitle>
@@ -308,7 +308,7 @@ export default function ApiDocsPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gradient-to-br from-blue-50 to-white">
+          <Card className="bg-linear-to-br from-blue-50 to-white">
             <CardHeader>
               <Shield className="h-8 w-8 text-blue-600 mb-2" />
               <CardTitle className="text-lg">Get API Key</CardTitle>

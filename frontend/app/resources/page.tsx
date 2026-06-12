@@ -19,7 +19,7 @@ import Link from "next/link"
 
 export default function ResourcesPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50/30 to-slate-50">
       <Header />
 
       <div className="container mx-auto px-4 py-12 max-w-6xl">
@@ -28,14 +28,14 @@ export default function ResourcesPage() {
         <div className="mb-12 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Resources &{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">Roadmap</span>
+            <span className="bg-linear-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">Roadmap</span>
           </h1>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
             Research library, analytical tools, and open-source development roadmap for debt intelligence infrastructure
           </p>
         </div>
 
-        <Card className="mb-12 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+        <Card className="mb-12 bg-linear-to-br from-blue-50 to-white border-2 border-blue-200">
           <CardHeader>
             <CardTitle className="text-2xl">About This Platform</CardTitle>
             <CardDescription className="text-base text-slate-500">
@@ -61,7 +61,7 @@ export default function ResourcesPage() {
           </CardContent>
         </Card>
 
-        <Card className="mb-12 bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+        <Card className="mb-12 bg-linear-to-br from-blue-50 to-white border-2 border-blue-200">
           <CardHeader>
             <CardTitle className="text-2xl">Building Coordination Infrastructure</CardTitle>
             <CardDescription className="text-base">
@@ -120,7 +120,7 @@ export default function ResourcesPage() {
             <Card className="bg-white/80 backdrop-blur border-l-4 border-l-blue-500">
               <CardHeader>
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
                     <BarChart className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
@@ -147,7 +147,7 @@ export default function ResourcesPage() {
             <Card className="bg-white/80 backdrop-blur border-l-4 border-l-blue-500">
               <CardHeader>
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
                     <Search className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
@@ -174,7 +174,7 @@ export default function ResourcesPage() {
             <Card className="bg-white/80 backdrop-blur border-l-4 border-l-blue-500">
               <CardHeader>
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
                     <Database className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
@@ -209,7 +209,7 @@ export default function ResourcesPage() {
             <Card className="bg-white/80 backdrop-blur border-l-4 border-l-slate-300 opacity-75">
               <CardHeader>
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
                     <FileText className="h-6 w-6 text-slate-600" />
                   </div>
                   <div>
@@ -235,7 +235,7 @@ export default function ResourcesPage() {
             <Card className="bg-white/80 backdrop-blur border-l-4 border-l-slate-300 opacity-75">
               <CardHeader>
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
                     <BarChart className="h-6 w-6 text-slate-600" />
                   </div>
                   <div>
@@ -261,7 +261,7 @@ export default function ResourcesPage() {
             <Card className="bg-white/80 backdrop-blur border-l-4 border-l-slate-300 opacity-75">
               <CardHeader>
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
                     <BookOpen className="h-6 w-6 text-slate-600" />
                   </div>
                   <div>
@@ -287,7 +287,7 @@ export default function ResourcesPage() {
             <Card className="bg-white/80 backdrop-blur border-l-4 border-l-slate-300 opacity-75">
               <CardHeader>
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
                     <BookOpen className="h-6 w-6 text-slate-600" />
                   </div>
                   <div>
@@ -313,7 +313,7 @@ export default function ResourcesPage() {
             <Card className="bg-white/80 backdrop-blur border-l-4 border-l-slate-300 opacity-75">
               <CardHeader>
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
                     <Scale className="h-6 w-6 text-slate-600" />
                   </div>
                   <div>
@@ -339,7 +339,7 @@ export default function ResourcesPage() {
             <Card className="bg-white/80 backdrop-blur border-l-4 border-l-slate-300 opacity-75">
               <CardHeader>
                 <div className="flex items-start gap-3">
-                  <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center flex-shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center shrink-0">
                     <FileText className="h-6 w-6 text-slate-600" />
                   </div>
                   <div>
@@ -497,7 +497,7 @@ export default function ResourcesPage() {
           </div>
         </div>
 
-        <Card className="bg-gradient-to-br from-blue-50 to-white border-2 border-blue-200">
+        <Card className="bg-linear-to-br from-blue-50 to-white border-2 border-blue-200">
           <CardHeader className="text-center">
             <CardTitle className="text-2xl mb-2">How to Contribute</CardTitle>
             <CardDescription>Help build debt intelligence infrastructure for the global community</CardDescription>
@@ -505,7 +505,7 @@ export default function ResourcesPage() {
           <CardContent>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
                   <GitBranch className="h-5 w-5 text-blue-600" />
                 </div>
                 <div>
@@ -517,7 +517,7 @@ export default function ResourcesPage() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
                   <Users className="h-5 w-5 text-blue-600" />
                 </div>
                 <div>
@@ -527,7 +527,7 @@ export default function ResourcesPage() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
                   <FileText className="h-5 w-5 text-blue-600" />
                 </div>
                 <div>
@@ -537,7 +537,7 @@ export default function ResourcesPage() {
               </div>
 
               <div className="flex items-start gap-3">
-                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
                   <Code className="h-5 w-5 text-blue-600" />
                 </div>
                 <div>
@@ -558,7 +558,7 @@ export default function ResourcesPage() {
           </CardContent>
         </Card>
 
-        <Card className="mt-8 bg-gradient-to-br from-slate-50 to-white border border-slate-200">
+        <Card className="mt-8 bg-linear-to-br from-slate-50 to-white border border-slate-200">
           <CardHeader className="text-center">
             <CardTitle className="text-xl mb-2">Data Sources</CardTitle>
             <CardDescription>All resources use verified data from official sources</CardDescription>

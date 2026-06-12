@@ -77,7 +77,7 @@ export function AIChat() {
       {isOpen && (
         <div className="fixed bottom-6 right-6 z-50 w-[400px] max-w-[calc(100vw-2rem)] h-[560px] max-h-[calc(100vh-3rem)] flex flex-col rounded-2xl shadow-2xl shadow-[#1e3a5f]/20 border border-[#1e3a5f]/15 bg-white overflow-hidden">
           {/* Header */}
-          <div className="gradient-navy px-5 py-4 flex items-center justify-between flex-shrink-0">
+          <div className="gradient-navy px-5 py-4 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-3">
               <div className="p-1.5 bg-white/15 rounded-lg">
                 <Sparkles className="h-5 w-5 text-white" />
@@ -159,7 +159,7 @@ export function AIChat() {
           </div>
 
           {/* Input */}
-          <div className="border-t border-slate-200 px-4 py-3 bg-white flex-shrink-0">
+          <div className="border-t border-slate-200 px-4 py-3 bg-white shrink-0">
             <div className="flex items-center gap-2">
               <input
                 ref={inputRef}
@@ -175,7 +175,7 @@ export function AIChat() {
                 onClick={handleSend}
                 disabled={!input.trim() || isLoading}
                 size="sm"
-                className="gradient-navy hover:opacity-90 text-white rounded-xl h-10 w-10 p-0 flex-shrink-0"
+                className="gradient-navy hover:opacity-90 text-white rounded-xl h-10 w-10 p-0 shrink-0"
               >
                 <Send className="h-4 w-4" />
               </Button>

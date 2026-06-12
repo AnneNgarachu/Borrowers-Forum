@@ -13,7 +13,7 @@ import Link from "next/link"
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50/30 to-slate-50">
       <Header />
 
       {/* Hero Section */}
@@ -21,7 +21,7 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <h1 className="text-4xl md:text-6xl font-bold text-balance">
             Debt Intelligence for{" "}
-            <span className="bg-gradient-to-r from-[#1e3a5f] to-[#2d5a8e] bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-[#1e3a5f] to-[#2d5a8e] bg-clip-text text-transparent">
               Developing Nations
             </span>
           </h1>
@@ -136,7 +136,7 @@ export default function HomePage() {
             {/* 2. Precedents Search - Teal (Find comparable cases) */}
             <Card className="bg-white/80 backdrop-blur border-slate-200 shadow-sm hover:shadow-lg transition-all hover:-translate-y-1">
               <CardHeader>
-                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-teal-600 to-teal-500 flex items-center justify-center mb-4 shadow-lg shadow-teal-500/30">
+                <div className="w-12 h-12 rounded-lg bg-linear-to-br from-teal-600 to-teal-500 flex items-center justify-center mb-4 shadow-lg shadow-teal-500/30">
                   <Search className="h-6 w-6 text-white" />
                 </div>
                 <CardTitle className="text-xl">Verified Precedents</CardTitle>
@@ -156,7 +156,7 @@ export default function HomePage() {
                   <span>12 climate-linked restructuring cases</span>
                 </div>
                 <Link href="/precedents">
-                  <Button className="w-full mt-4 bg-gradient-to-r from-teal-600 to-teal-500 hover:opacity-90 text-white">
+                  <Button className="w-full mt-4 bg-linear-to-r from-teal-600 to-teal-500 hover:opacity-90 text-white">
                     Explore Precedents
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>

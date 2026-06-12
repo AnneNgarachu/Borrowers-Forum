@@ -13,7 +13,7 @@ import {
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50/30 to-slate-50">
       <Header />
 
       <div className="container mx-auto px-4 py-12 max-w-6xl">
@@ -22,7 +22,7 @@ export default function AboutPage() {
         <div className="mb-12 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             About{" "}
-            <span className="bg-gradient-to-r from-[#1e3a5f] to-[#2d5a8e] bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-[#1e3a5f] to-[#2d5a8e] bg-clip-text text-transparent">
               The Platform
             </span>
           </h1>
@@ -32,7 +32,7 @@ export default function AboutPage() {
         </div>
 
         {/* The Problem */}
-        <Card className="mb-8 bg-gradient-to-br from-[#1e3a5f]/5 to-white border-2 border-[#1e3a5f]/15">
+        <Card className="mb-8 bg-linear-to-br from-[#1e3a5f]/5 to-white border-2 border-[#1e3a5f]/15">
           <CardHeader>
             <CardTitle className="text-2xl text-[#1e3a5f]">The Information Asymmetry</CardTitle>
           </CardHeader>
@@ -70,7 +70,7 @@ export default function AboutPage() {
               </div>
 
               <div className="space-y-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-600 to-teal-500 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-linear-to-br from-teal-600 to-teal-500 flex items-center justify-center">
                   <BarChart className="h-5 w-5 text-white" />
                 </div>
                 <h3 className="font-semibold text-slate-900">Analytical Tools</h3>
@@ -111,28 +111,28 @@ export default function AboutPage() {
                 </h3>
                 <ul className="space-y-3 text-sm text-slate-600">
                   <li className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f] mt-1.5 flex-shrink-0" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f] mt-1.5 shrink-0" />
                     <div>
                       <span className="font-medium text-slate-700">IMF Staff Reports &amp; Press Releases</span>
                       <p className="text-slate-500">Debt sustainability analyses, program documents, and lending data</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f] mt-1.5 flex-shrink-0" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f] mt-1.5 shrink-0" />
                     <div>
                       <span className="font-medium text-slate-700">Paris Club Official Reports</span>
                       <p className="text-slate-500">Agreed minutes and treatment terms for bilateral debt</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f] mt-1.5 flex-shrink-0" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f] mt-1.5 shrink-0" />
                     <div>
                       <span className="font-medium text-slate-700">World Bank WDI &amp; Debt Reports</span>
                       <p className="text-slate-500">Economic indicators, debt statistics, and development data</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#f59e0b] mt-1.5 flex-shrink-0" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#f59e0b] mt-1.5 shrink-0" />
                     <div>
                       <span className="font-medium text-slate-700">ND-GAIN Climate Vulnerability Index</span>
                       <p className="text-slate-500">Country-level climate vulnerability and readiness scores</p>
@@ -148,28 +148,28 @@ export default function AboutPage() {
                 </h3>
                 <ul className="space-y-3 text-sm text-slate-600">
                   <li className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f] mt-1.5 flex-shrink-0" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f] mt-1.5 shrink-0" />
                     <div>
                       <span className="font-medium text-slate-700">23 Countries</span>
                       <p className="text-slate-500">Sub-Saharan Africa, South Asia, Latin America &amp; Caribbean, MENA, Europe</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f] mt-1.5 flex-shrink-0" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#1e3a5f] mt-1.5 shrink-0" />
                     <div>
                       <span className="font-medium text-slate-700">20 Verified Precedents</span>
                       <p className="text-slate-500">HIPC, Common Framework, Paris Club, bilateral, and private restructurings</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-[#f59e0b] mt-1.5 flex-shrink-0" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#f59e0b] mt-1.5 shrink-0" />
                     <div>
                       <span className="font-medium text-slate-700">12 Climate-Linked Cases</span>
                       <p className="text-slate-500">Including blue bonds, debt-for-nature swaps, and disaster clauses</p>
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
-                    <div className="w-1.5 h-1.5 rounded-full bg-teal-600 mt-1.5 flex-shrink-0" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-teal-600 mt-1.5 shrink-0" />
                     <div>
                       <span className="font-medium text-slate-700">5 Treatment Types</span>
                       <p className="text-slate-500">Flow, Stock, HIPC, Common Framework, Blue Bond</p>
@@ -189,7 +189,7 @@ export default function AboutPage() {
           <CardContent>
             <div className="grid md:grid-cols-2 gap-6">
               <div className="flex items-start gap-4 p-4 rounded-lg bg-slate-50">
-                <div className="w-10 h-10 rounded-lg gradient-navy flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-lg gradient-navy flex items-center justify-center shrink-0">
                   <Users className="h-5 w-5 text-white" />
                 </div>
                 <div>
@@ -201,7 +201,7 @@ export default function AboutPage() {
               </div>
 
               <div className="flex items-start gap-4 p-4 rounded-lg bg-slate-50">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-teal-600 to-teal-500 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-lg bg-linear-to-br from-teal-600 to-teal-500 flex items-center justify-center shrink-0">
                   <BarChart className="h-5 w-5 text-white" />
                 </div>
                 <div>
@@ -216,7 +216,7 @@ export default function AboutPage() {
         </Card>
 
         {/* Open Source */}
-        <Card className="bg-gradient-to-br from-[#1e3a5f]/5 to-white border-2 border-[#1e3a5f]/15">
+        <Card className="bg-linear-to-br from-[#1e3a5f]/5 to-white border-2 border-[#1e3a5f]/15">
           <CardContent className="pt-6">
             <div className="text-center space-y-3">
               <p className="text-slate-700 font-medium">

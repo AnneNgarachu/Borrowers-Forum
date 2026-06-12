@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 
 export default function LegalPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50/30 to-slate-50">
       <Header />
 
       <div className="container mx-auto px-4 py-12 max-w-4xl">
@@ -16,7 +16,7 @@ export default function LegalPage() {
         <div className="mb-12 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-4">
             Legal{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
               Information
             </span>
           </h1>

@@ -169,7 +169,7 @@ export function StrategyBrief({
   // Not yet generated — show the trigger button
   if (!brief && !isGenerating && !error) {
     return (
-      <Card className="border-2 border-dashed border-[#1e3a5f]/20 bg-gradient-to-br from-[#1e3a5f]/5 to-transparent">
+      <Card className="border-2 border-dashed border-[#1e3a5f]/20 bg-linear-to-br from-[#1e3a5f]/5 to-transparent">
         <CardContent className="py-8">
           <div className="text-center space-y-4">
             <div className="inline-flex p-4 rounded-full bg-[#1e3a5f]/10">
@@ -199,7 +199,7 @@ export function StrategyBrief({
   // Generating state
   if (isGenerating) {
     return (
-      <Card className="border border-[#1e3a5f]/20 bg-gradient-to-br from-[#1e3a5f]/5 to-transparent">
+      <Card className="border border-[#1e3a5f]/20 bg-linear-to-br from-[#1e3a5f]/5 to-transparent">
         <CardContent className="py-12">
           <div className="text-center space-y-4">
             <div className="inline-flex p-4 rounded-full bg-[#1e3a5f]/10 animate-pulse">
@@ -286,7 +286,7 @@ export function StrategyBrief({
                 )}
               </p>
             </div>
-            <div className="text-right flex-shrink-0">
+            <div className="text-right shrink-0">
               <p className="text-white font-bold text-lg font-mono">
                 ${(brief!.parameters.debt_amount_usd / 1_000_000).toFixed(1)}M
               </p>
@@ -330,7 +330,7 @@ export function StrategyBrief({
               {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
               &middot; {brief!.precedents_used} precedents &middot; {brief!.climate_precedents_used} climate cases
             </p>
-            <Button onClick={handleDownloadPDF} variant="outline" size="sm" className="bg-transparent flex-shrink-0">
+            <Button onClick={handleDownloadPDF} variant="outline" size="sm" className="bg-transparent shrink-0">
               <Download className="mr-2 h-4 w-4" />
               Download as PDF
             </Button>

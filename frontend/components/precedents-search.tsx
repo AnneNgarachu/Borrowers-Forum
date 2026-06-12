@@ -229,7 +229,7 @@ export function PrecedentsSearch() {
   return (
     <div className="space-y-6">
       <Card className="border-border/50 shadow-lg">
-        <CardHeader className="bg-gradient-to-br from-[#1e3a5f]/5 to-transparent">
+        <CardHeader className="bg-linear-to-br from-[#1e3a5f]/5 to-transparent">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3 flex-1">
               <div className="p-2 rounded-lg bg-[#1e3a5f] text-white">
@@ -685,7 +685,7 @@ export function PrecedentsSearch() {
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
-                    <div className="flex-1 h-px bg-gradient-to-r from-[#1e3a5f] to-transparent ml-2"></div>
+                    <div className="flex-1 h-px bg-linear-to-r from-[#1e3a5f] to-transparent ml-2"></div>
                   </div>
                 </div>
               )}
@@ -693,7 +693,7 @@ export function PrecedentsSearch() {
               {sortedPrecedents.length > 1 && (
                 <>
                   <div className="flex items-center gap-3 py-4">
-                    <div className="h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent flex-1" />
+                    <div className="h-px bg-linear-to-r from-transparent via-slate-300 to-transparent flex-1" />
                     <div className="flex items-center gap-2 px-4 py-2 bg-amber-50 rounded-full border border-amber-200">
                       <TrendingUp className="h-4 w-4 text-amber-600" />
                       <span className="text-sm font-semibold text-amber-900">Similar Matches</span>
@@ -701,7 +701,7 @@ export function PrecedentsSearch() {
                         {similarMatches.length}
                       </Badge>
                     </div>
-                    <div className="h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent flex-1" />
+                    <div className="h-px bg-linear-to-r from-transparent via-slate-300 to-transparent flex-1" />
                   </div>
 
                   {similarMatches.map((precedent) => {
@@ -726,7 +726,7 @@ export function PrecedentsSearch() {
                                 </p>
                               </div>
                             </div>
-                            <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg border-2 border-amber-300 shadow-sm">
+                            <div className="flex items-center gap-2 px-3 py-2 bg-linear-to-r from-amber-50 to-yellow-50 rounded-lg border-2 border-amber-300 shadow-sm">
                               <TrendingUp className="h-4 w-4 text-amber-600" />
                               <span className="text-lg font-bold text-amber-900">{similarity}%</span>
                               <span className="text-xs text-amber-700 font-medium">Match</span>

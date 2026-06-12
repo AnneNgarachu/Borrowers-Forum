@@ -107,14 +107,14 @@ export default function CountriesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-slate-50">
+    <div className="min-h-screen bg-linear-to-br from-slate-50 via-blue-50/30 to-slate-50">
       <Header />
 
       <main className="container mx-auto px-4 py-8 space-y-6">
         <Breadcrumbs />
 
         <Card className="border-border/50 shadow-lg">
-          <CardHeader className="bg-gradient-to-br from-[#1e3a5f]/5 to-transparent">
+          <CardHeader className="bg-linear-to-br from-[#1e3a5f]/5 to-transparent">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-[#1e3a5f] text-white">
