@@ -1,3 +1,7 @@
+# Borrower's Forum Platform
+# Copyright (c) 2025-2026 Anne Wanjiru Ngarachu / SAGE Platform LLC
+# Licensed under MIT License
+
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 pydantic==1.10.13

@@ -87,7 +87,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=settings.APP_NAME,
     version=settings.APP_VERSION,
-    description="Debt intelligence platform for the UN-backed Borrower's Forum",
+    description="Open-source debt intelligence platform for debt-stressed countries",
     docs_url="/api/docs",  # Swagger UI
     redoc_url="/api/redoc",  # ReDoc
     openapi_url="/api/openapi.json",

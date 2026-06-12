@@ -211,7 +211,7 @@ class APIKey(Base):
     key_hash = Column(String(128), nullable=False)
     
     # Key metadata
-    name = Column(String(100), nullable=False)  # e.g., "UN Borrower's Forum - Production"
+    name = Column(String(100), nullable=False)  # e.g., "Borrower's Forum - Production"
     owner = Column(String(100), nullable=False)  # e.g., "UN DESA"
     
     # Permissions: "read", "read_write", "admin"

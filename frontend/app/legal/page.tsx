@@ -137,8 +137,9 @@ export default function LegalPage() {
               </li>
             </ul>
             <p className="text-sm text-slate-500 mt-4">
-              Data reflects publicly available information as of December 2024. We encourage users to consult primary
-              sources for the most current information.
+              Precedent data covers historical restructuring cases from 2017 to 2023, compiled from publicly available
+              IMF, Paris Club, and World Bank sources. Live economic indicators are retrieved in real time from the
+              World Bank API. We encourage users to consult primary sources for the most current information.
             </p>
           </CardContent>
         </Card>
@@ -223,7 +224,7 @@ export default function LegalPage() {
         </Card>
 
         <div className="text-center text-sm text-slate-500 mt-12">
-          <p>Last updated: January 2025</p>
+          <p>Last updated: June 2026</p>
         </div>
       </div>
 

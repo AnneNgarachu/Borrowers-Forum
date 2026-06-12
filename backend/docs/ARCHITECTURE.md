@@ -316,7 +316,7 @@ class APIKey(Base):
 **Rationale:**
 - Project phase: MVP/Validation
 - Expected users: <1,000 initially
-- Business risk: HIGH (UN-backed, public-facing)
+- Business risk: HIGH (open-source, public-facing)
 - Team size: Solo developer
 - **Conclusion:** Prioritize readable, maintainable code over premature optimization
 

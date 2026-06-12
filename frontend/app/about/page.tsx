@@ -27,7 +27,7 @@ export default function AboutPage() {
             </span>
           </h1>
           <p className="text-xl text-slate-600 max-w-3xl mx-auto">
-            Operationalizing digital infrastructure called for by the UN Expert Group on Debt
+            Aligned with the UN Expert Group on Debt's agenda
           </p>
         </div>
 

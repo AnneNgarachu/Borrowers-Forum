@@ -1,8 +1,8 @@
 # 🌍 Borrower's Forum Platform
 
-**Debt Intelligence Platform for the UN-backed Borrower's Forum**
+**Open-source debt intelligence platform helping debt-stressed countries make informed restructuring decisions.**
 
-A production-ready API that helps debt-stressed countries make informed decisions through data-driven debt analysis and historical precedent matching.
+Creditors coordinate. Debtors don't. Since 1956, creditor nations have organized through the Paris Club, while debtor nations negotiate individually. This platform gives debtor nations shared intelligence to help close that gap, through data-driven debt analysis and historical precedent matching.
 
 [![Live Status](https://img.shields.io/badge/Status-🟢%20LIVE-success)](https://borrowers-forum.onrender.com)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/)
@@ -14,7 +14,7 @@ A production-ready API that helps debt-stressed countries make informed decision
 
 ## 🌐 Live Platform
 
-**The platform is LIVE and operational!**
+**The platform is LIVE and operational.**
 
 | Resource | URL |
 |----------|-----|
@@ -23,11 +23,17 @@ A production-ready API that helps debt-stressed countries make informed decision
 | **❤️ Health Check** | https://borrowers-forum.onrender.com/health |
 | **📘 ReDoc** | https://borrowers-forum.onrender.com/api/redoc |
 
-**⚠️ Note:** All data endpoints require API key authentication. Contact the administrator to obtain an API key.
+**⚠️ Note:** Data endpoints are protected by API key authentication. The public web frontend at [borrowersforum.org](https://www.borrowersforum.org) accesses these endpoints through a server-side key, so visitors can use the site anonymously without registering. Direct API access requires a key; contact the maintainer to request one.
 
 ---
 
 ## ✨ Features
+
+### 🤖 **AI Strategy Tools** (Claude integration)
+Generative AI features powered by the Anthropic Claude API:
+- **Strategy Brief Generator**: Produces a tailored debt-strategy brief from country, precedent, and debt-data context
+- **Advisory Chat**: Conversational endpoint for debt-restructuring questions, grounded in platform data
+- **Model**: `claude-haiku-4-5`
 
 ### 🔐 **API Key Authentication**
 Secure access control for all data endpoints:
@@ -40,12 +46,12 @@ Convert abstract debt service payments into tangible opportunity costs:
 - **Healthcare**: How many doctors could be employed for 1 or 5 years?
 - **Education**: How many schools could be built?
 - **Climate**: What percentage of annual climate adaptation budget?
-- **Live Data Mode**: Calculate with real-time World Bank data for 190+ countries
+- **Live Data Mode**: Calculate using real-time World Bank data for 190+ countries, with a graceful fallback to stored estimates if live data is unavailable
 
 ### 🔍 **Precedents Search**
-Find historical debt restructuring cases with AI-powered similarity matching:
+Find historical debt restructuring cases with weighted similarity matching:
 - **Advanced Filtering**: By country, year range, creditor type, treatment type, climate clauses
-- **AI Similarity Scoring**: Intelligent matching based on 5 factors (regional, income level, climate vulnerability, debt amount, recency)
+- **Similarity Scoring**: Deterministic 0-100 scoring across 5 weighted factors (regional, income level, climate vulnerability, debt amount, recency)
 - **Statistics Dashboard**: Aggregated insights by creditor type, treatment type, climate clauses
 - **Climate Tracking**: Identify cases with climate adaptation clauses
 
@@ -55,10 +61,10 @@ Real-time economic data integration:
 - **Live Indicators**: GDP, population, external debt, debt service, government revenue
 - **Automatic Caching**: 1-hour TTL for performance
 
-### 🌍 **Country Data**
+### 🗂️ **Country & Precedent Data**
 - Comprehensive country profiles with economic and climate indicators
-- 5 countries with detailed data: Ghana, Kenya, Zambia, Pakistan, Bangladesh
-- Climate vulnerability scoring
+- **20 countries** seeded with detailed profiles and climate vulnerability scoring
+- **23 historical precedent cases** (2017-2023) drawn from official IMF, Paris Club, and World Bank documentation
 
 ---
 
@@ -85,7 +91,7 @@ curl -H "X-API-Key: your_api_key_here" \
 ### **Option 2: Run Locally**
 
 #### Prerequisites
-- Python 3.11+ (NOT 3.13 - see note below)
+- Python 3.11.x (NOT 3.13 - see note below)
 - PostgreSQL database (or Supabase account)
 - Git
 
@@ -94,7 +100,7 @@ curl -H "X-API-Key: your_api_key_here" \
 ```bash
 # Clone the repository
 git clone https://github.com/AnneNgarachu/Borrowers-Forum.git
-cd Borrowers-Forum
+cd Borrowers-Forum/backend
 
 # Create virtual environment
 python -m venv venv
@@ -109,9 +115,10 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 # Set up environment variables
-# Create .env file with your database credentials
+# Create .env file with your credentials
 echo "DATABASE_URL=postgresql://..." > .env
 echo "BOOTSTRAP_SECRET=your_secret_here" >> .env
+echo "ANTHROPIC_API_KEY=your_anthropic_key_here" >> .env
 
 # Run the server
 uvicorn src.api.main:app --reload
@@ -125,7 +132,7 @@ uvicorn src.api.main:app --reload
 
 ---
 
-## 📊 API Endpoints (19 Total)
+## 📊 API Endpoints (26 Total)
 
 ### **Public Endpoints** (2)
 ```
@@ -133,11 +140,13 @@ GET    /                              # API information
 GET    /health                        # Health check with database status
 ```
 
-### **Countries** (3) - 🔐 Protected
+### **Countries** (6) - 🔐 Protected
 ```
 GET    /api/v1/countries              # List all countries
 POST   /api/v1/countries              # Create new country
 GET    /api/v1/countries/{code}       # Get specific country by ISO code
+PUT    /api/v1/countries/{code}       # Update a country
+DELETE /api/v1/countries/{code}       # Delete a country
 ```
 
 ### **Debt Calculator** (4) - 🔐 Protected
@@ -151,7 +160,7 @@ GET    /api/v1/debt/info              # Get calculator methodology
 ### **Precedents Search** (3) - 🔐 Protected
 ```
 GET    /api/v1/precedents             # Search with filters
-GET    /api/v1/precedents/similar     # AI similarity matching
+GET    /api/v1/precedents/similar     # Weighted similarity matching
 GET    /api/v1/precedents/stats       # Get statistics
 ```
 
@@ -160,6 +169,12 @@ GET    /api/v1/precedents/stats       # Get statistics
 GET    /api/v1/live/economic/{code}   # Live economic data from World Bank
 GET    /api/v1/live/debt/{code}       # Live debt data for calculator
 GET    /api/v1/live/countries         # List supported countries
+```
+
+### **AI Strategy Tools** (2) - 🔐 Protected
+```
+POST   /api/v1/ai/strategy-brief      # Generate a debt-strategy brief (Claude)
+POST   /api/v1/ai/chat                # Advisory chat (Claude)
 ```
 
 ### **Admin** (6) - 🔐 Admin Only
@@ -302,7 +317,7 @@ pytest tests/ -v
 │  ┌───────────────────────────────────────┐  │
 │  │         API Routers                   │  │
 │  │  Countries | Debt | Precedents        │  │
-│  │  Live Data | Admin                    │  │
+│  │  Live Data | AI | Admin               │  │
 │  └───────────────────────────────────────┘  │
 │                    ↓                         │
 │  ┌───────────────────────────────────────┐  │
@@ -316,7 +331,8 @@ pytest tests/ -v
 │  │       Service Layer                   │  │
 │  │  - Business Logic                     │  │
 │  │  - Calculations                       │  │
-│  │  - AI Similarity Matching             │  │
+│  │  - Weighted Similarity Scoring        │  │
+│  │  - Claude AI Service                  │  │
 │  │  - External API Clients               │  │
 │  └───────────────────────────────────────┘  │
 │                    ↓                         │
@@ -326,11 +342,11 @@ pytest tests/ -v
 │  │  - Session Management                 │  │
 │  └───────────────────────────────────────┘  │
 └─────────────────────────────────────────────┘
-          ↓                    ↓
-┌─────────────────┐  ┌─────────────────────┐
-│ Supabase        │  │ World Bank API      │
-│ PostgreSQL      │  │ (Live Data)         │
-└─────────────────┘  └─────────────────────┘
+        ↓              ↓               ↓
+┌─────────────┐ ┌──────────────┐ ┌──────────────┐
+│ Supabase    │ │ World Bank   │ │ Anthropic    │
+│ PostgreSQL  │ │ API (Live)   │ │ Claude API   │
+└─────────────┘ └──────────────┘ └──────────────┘
 ```
 
 **Key Design Principles:**
@@ -351,11 +367,12 @@ pytest tests/ -v
 | **FastAPI** | 0.104.1 | Web framework |
 | **Pydantic** | 1.10.13 | Data validation |
 | **SQLAlchemy** | 2.0.23 | ORM |
+| **anthropic** | >=0.39.0 | Claude API client |
 | **PostgreSQL** | 15+ | Database |
 | **Supabase** | Cloud | Database hosting |
 | **Render** | Cloud | Application hosting |
 | **Uvicorn** | 0.24.0 | ASGI server |
-| **pytest** | 9.0+ | Testing framework |
+| **pytest** | >=7.4.0 | Testing framework |
 | **httpx** | 0.27.0 | HTTP client for tests |
 
 ---
@@ -364,72 +381,70 @@ pytest tests/ -v
 
 ```
 Borrowers-Forum/
-├── src/
-│   ├── api/
-│   │   ├── main.py                    # FastAPI application
-│   │   ├── dependencies.py            # Dependency injection
-│   │   ├── auth.py                    # Authentication & rate limiting
-│   │   └── routers/
-│   │       ├── countries.py           # Countries endpoints
-│   │       ├── debt.py                # Debt calculator endpoints
-│   │       ├── precedents.py          # Precedents search endpoints
-│   │       ├── live_data.py           # Live World Bank data endpoints
-│   │       └── admin.py               # Admin key management
-│   ├── config/
-│   │   └── settings.py                # Configuration management
-│   ├── models/
-│   │   └── debt_data.py               # SQLAlchemy models
-│   ├── services/
-│   │   ├── database.py                # Database connection
-│   │   ├── debt_calculator.py         # Debt calculation logic
-│   │   ├── precedent_search.py        # Precedents search logic
-│   │   ├── auth_service.py            # API key management
-│   │   └── external_data.py           # World Bank API client
-│   └── utils/
-│       ├── env_validator.py           # Environment validation
-│       ├── add_test_data.py           # Test data scripts
-│       └── add_api_keys_table.py      # API keys table setup
-├── tests/
-│   ├── __init__.py
-│   ├── conftest.py                    # Test fixtures
-│   ├── test_health.py                 # Health endpoint tests
-│   ├── test_countries.py              # Countries API tests
-│   ├── test_debt.py                   # Debt calculator tests
-│   ├── test_precedents.py             # Precedents search tests
-│   └── test_auth.py                   # Authentication tests
-├── docs/
-│   ├── ARCHITECTURE.md                # Architecture overview
-│   ├── CHAT_HANDOFF.md                # Development handoff
-│   └── DEPLOYMENT_GUIDE.md            # Deployment configuration
-├── Procfile                           # Render start command
-├── runtime.txt                        # Python version
-├── requirements.txt                   # Python dependencies
-├── .env.example                       # Example environment variables
-├── .gitignore
-└── README.md                          # This file
+├── backend/
+│   ├── src/
+│   │   ├── api/
+│   │   │   ├── main.py                # FastAPI application
+│   │   │   ├── dependencies.py        # Dependency injection
+│   │   │   ├── auth.py                # Authentication & rate limiting
+│   │   │   └── routers/
+│   │   │       ├── countries.py       # Countries endpoints
+│   │   │       ├── debt.py            # Debt calculator endpoints
+│   │   │       ├── precedents.py      # Precedents search endpoints
+│   │   │       ├── live_data.py       # Live World Bank data endpoints
+│   │   │       ├── ai.py              # Claude AI endpoints
+│   │   │       └── admin.py           # Admin key management
+│   │   ├── config/
+│   │   │   └── settings.py            # Configuration management
+│   │   ├── models/
+│   │   │   └── debt_data.py           # SQLAlchemy models
+│   │   ├── services/
+│   │   │   ├── database.py            # Database connection
+│   │   │   ├── debt_calculator.py     # Debt calculation logic
+│   │   │   ├── precedent_search.py    # Precedents search logic
+│   │   │   ├── auth_service.py        # API key management
+│   │   │   ├── ai_service.py          # Claude AI service
+│   │   │   └── external_data.py       # World Bank API client
+│   │   └── utils/
+│   │       ├── env_validator.py       # Environment validation
+│   │       └── add_api_keys_table.py  # API keys table setup
+│   ├── tests/
+│   │   ├── conftest.py                # Test fixtures
+│   │   ├── test_health.py             # Health endpoint tests
+│   │   ├── test_countries.py          # Countries API tests
+│   │   ├── test_debt.py               # Debt calculator tests
+│   │   ├── test_precedents.py         # Precedents search tests
+│   │   └── test_auth.py               # Authentication tests
+│   ├── seed_production.sql            # Production data seed
+│   ├── Procfile                       # Render start command
+│   ├── runtime.txt                    # Python version
+│   ├── requirements.txt               # Python dependencies
+│   └── README.md                      # This file
+├── frontend/                          # Next.js web application
+└── README.md
 ```
 
 ---
 
 ## 🗄️ Database Schema
 
-### **Countries** (5 records)
+### **Countries** (20 seeded)
 Country profiles with economic and climate indicators.
 
-### **DebtData** (5 records)
+### **DebtData**
 Time-series debt service and development spending data.
 
-### **Precedents** (5 records)
-Historical debt restructuring cases with climate considerations.
+### **Precedents** (23 seeded)
+Historical debt restructuring cases (2017-2023) with climate considerations.
 
-### **APIKeys** (1+ records)
+### **APIKeys**
 API key storage with permissions and rate limits.
 
 ---
 
-## 🤖 AI Similarity Matching
+## 🎯 Weighted Similarity Scoring
 
-The precedents search uses an intelligent scoring algorithm (0-100) based on:
+The precedents search uses a deterministic, rule-based scoring algorithm (0-100). This is a transparent weighted formula, not a machine-learning model:
 
 | Factor | Weight | Description |
 |--------|--------|-------------|
@@ -438,6 +453,8 @@ The precedents search uses an intelligent scoring algorithm (0-100) based on:
 | **Climate Vulnerability** | 15 points | Similar climate vulnerability scores |
 | **Debt Amount** | 20 points | Comparable debt size (within 50-200%) |
 | **Recency** | 10 points | More recent cases score higher |
+
+> Generative AI (the Claude integration) powers the separate Strategy Brief and Advisory Chat features. Precedent similarity is intentionally rule-based for transparency and reproducibility.
 
 ---
 
@@ -450,9 +467,10 @@ The precedents search uses an intelligent scoring algorithm (0-100) based on:
 - [x] **Phase 5**: Testing (38 pytest tests) ✅
 - [x] **Phase 6**: Deployment to Render ✅
 - [x] **Phase 7**: Security & Authentication ✅
-- [ ] **Phase 8**: Frontend Dashboard
+- [x] **Phase 8**: AI Strategy Tools (Claude) ✅
+- [x] **Phase 9**: Web Frontend (Next.js) ✅
 
-**Current Status:** 🟢 LIVE - Production-ready API with authentication and tests
+**Current Status:** 🟢 LIVE - production API with authentication, AI features, and a live web frontend
 
 ---
 
@@ -462,17 +480,18 @@ The precedents search uses an intelligent scoring algorithm (0-100) based on:
 
 | Component | Service | Plan |
 |-----------|---------|------|
-| **API Hosting** | Render | Free |
-| **Database** | Supabase | Free |
-| **Region** | US West / US East | - |
+| **API Hosting** | Render | Starter ($7/mo) |
+| **Database** | Supabase | Cloud |
+| **Frontend** | Vercel | - |
 
 ### **Environment Variables Required**
 
 | Variable | Description |
 |----------|-------------|
-| `PYTHON_VERSION` | `3.11.10` (Critical for Pydantic V1 compatibility) |
+| `PYTHON_VERSION` | `3.11.10` (set on Render; takes precedence over runtime.txt) |
 | `DATABASE_URL` | PostgreSQL connection string |
 | `BOOTSTRAP_SECRET` | Secret for initial admin key creation |
+| `ANTHROPIC_API_KEY` | Required for the AI endpoints (return 503 if unset) |
 
 ### **Deploy Your Own**
 
@@ -483,19 +502,14 @@ See [docs/DEPLOYMENT_GUIDE.md](docs/DEPLOYMENT_GUIDE.md) for detailed instructio
 ## ⚠️ Important Notes
 
 ### **Python Version**
-This project requires **Python 3.11.x**. Python 3.13 is NOT compatible due to Pydantic V1 limitations. When deploying, always set `PYTHON_VERSION=3.11.10`.
-
-### **Free Tier Limitations**
-- Render free instances spin down after 15 minutes of inactivity
-- First request after sleep may take ~50 seconds
-- For production use, consider upgrading to paid tier ($7/month)
+This project requires **Python 3.11.x**. Python 3.13 is NOT compatible due to Pydantic V1 limitations. On Render, the `PYTHON_VERSION=3.11.10` environment variable takes precedence over `runtime.txt`. Keep both aligned to avoid confusion.
 
 ---
 
 ## 🔒 Security
 
 **Implemented:**
-- ✅ API key authentication on all data endpoints
+- ✅ API key authentication enforced on all data endpoints
 - ✅ Rate limiting (100 req/min standard, 1000/min admin)
 - ✅ Permission levels (read, read_write, admin)
 - ✅ SHA-256 key hashing (secure storage)
@@ -506,11 +520,13 @@ This project requires **Python 3.11.x**. Python 3.13 is NOT compatible due to Py
 - ✅ CORS configured properly
 - ✅ HTTPS enabled (automatic on Render)
 
+> **Note on access model:** Permissions are role-based (read / read_write / admin). The platform does not currently implement identity verification or a "verified government official" tier; the public frontend uses a single server-side key so visitors can browse anonymously. Per-user vetting is a possible future addition, not a current feature.
+
 ---
 
 ## 🤝 Contributing
 
-This is a UN-backed initiative. Contributions welcome!
+This is an independent open-source project. Contributions welcome!
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
@@ -524,22 +540,23 @@ This is a UN-backed initiative. Contributions welcome!
 
 ## 📝 License
 
-This project is licensed under the MIT License - see LICENSE file for details.
+This project is licensed under the MIT License. Copyright (c) 2025-2026 Anne Wanjiru Ngarachu / SAGE Platform LLC. See the [LICENSE](LICENSE) file for details.
 
 ---
 
 ## 🙏 Acknowledgments
 
-- **UN Borrower's Forum** - Project sponsor and vision
-- **IMF & World Bank** - Data sources and methodologies
-- **Paris Club** - Historical precedent documentation
+- **IMF, World Bank & Paris Club** - Data sources and methodologies for the seeded precedent and economic data
+- The platform concept is aligned with the agenda of the UN Expert Group on Debt and was developed through the COP30 Simulation Programme at the British University in Egypt
 
 ---
 
 ## 📞 Contact
 
-**Developer**: Anne Ngarachu  
-**GitHub**: [@AnneNgarachu](https://github.com/AnneNgarachu)  
+**Developer**: Anne Wanjiru Ngarachu
+**Portfolio**: [annengarachu.com](https://annengarachu.com)
+**LinkedIn**: [anne-wanjiru-ngarachu](https://www.linkedin.com/in/anne-wanjiru-ngarachu/)
+**GitHub**: [@AnneNgarachu](https://github.com/AnneNgarachu)
 **Repository**: [Borrowers-Forum](https://github.com/AnneNgarachu/Borrowers-Forum)
 
 ---
@@ -550,15 +567,13 @@ This project is licensed under the MIT License - see LICENSE file for details.
 |--------|-------|
 | **Version** | 1.0.0 |
 | **Status** | 🟢 LIVE |
-| **API Endpoints** | 19 |
+| **API Endpoints** | 26 |
 | **Automated Tests** | 38 |
 | **Database Tables** | 4 |
-| **Test Records** | 16 |
-| **Countries (stored)** | 5 |
-| **Countries (live)** | 190+ |
-
-**Last Updated:** December 1, 2025
+| **Countries (seeded)** | 20 |
+| **Precedents (seeded)** | 23 |
+| **Countries (live via World Bank)** | 190+ |
 
 ---
 
-*Built with ❤️ for debt-stressed countries seeking data-driven solutions*
+*Built for debt-stressed countries seeking data-driven solutions*

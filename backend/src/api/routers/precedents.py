@@ -261,7 +261,7 @@ async def find_similar_precedents(
     api_key: APIKey = Depends(require_api_key)  # 🔒 Protected
 ):
     """
-    Find similar precedents using AI-powered similarity matching.
+    Find similar precedents using weighted similarity matching.
 
     Requires: Valid API key with read permission.
     """

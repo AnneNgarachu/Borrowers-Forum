@@ -24,7 +24,7 @@
 
 ## 📊 PROJECT OVERVIEW
 
-**Borrower's Forum Platform** - Debt intelligence platform for the UN-backed Borrower's Forum
+**Borrower's Forum Platform** - Open-source debt intelligence platform for debt-stressed countries
 
 **Mission**: Enable debt-stressed countries to make informed decisions by providing:
 - Debt service vs development spending comparisons (✅ LIVE)
@@ -692,7 +692,7 @@ pytest-asyncio>=0.21.0
 **Project Phase**: MVP/Validation
 - **Priority**: Clean Code > Performance (Uncle Bob wins)
 - **Rationale**: Under 1,000 users initially, focus on maintainability
-- **Business Risk**: HIGH (UN-backed, international, public-facing)
+- **Business Risk**: HIGH (open-source, international, public-facing)
 - **Security**: ALWAYS wins for authentication, payments, PII
 
 **Emergency Override Rules Applied**:
