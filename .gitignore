@@ -67,6 +67,10 @@ outputs/*.docx
 outputs/*.xlsx
 !outputs/**/.gitkeep
 
+# Local-only documentation (internal reasoning / business strategy — never commit)
+docs/audits/
+docs/decisions/
+
 # Temporary
 *.tmp
 *.swp
