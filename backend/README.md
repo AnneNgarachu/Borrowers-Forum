@@ -540,7 +540,7 @@ This is an independent open-source project. Contributions welcome!
 
 ## 📝 License
 
-This project is licensed under the MIT License. Copyright (c) 2025-2026 Anne Wanjiru Ngarachu / SAGE Platform LLC. See the [LICENSE](../LICENSE) file for details.
+This project is licensed under the MIT License. Copyright (c) 2025-2026 Anne Wanjiru Ngarachu / SAGE Platform, Inc. See the [LICENSE](../LICENSE) file for details.
 
 ---
 

@@ -52,7 +52,7 @@ See **[`backend/README.md`](backend/README.md)** and **[`frontend/README.md`](fr
 
 ## License
 
-MIT License. Copyright (c) 2025-2026 Anne Wanjiru Ngarachu / SAGE Platform LLC. See [LICENSE](LICENSE) for details.
+MIT License. Copyright (c) 2025-2026 Anne Wanjiru Ngarachu / SAGE Platform, Inc. See [LICENSE](LICENSE) for details.
 
 ---
 

@@ -89,7 +89,8 @@ export default function ResourcesPage() {
                 <h3 className="font-semibold text-slate-900">Analytical Tools</h3>
                 <p className="text-sm text-slate-600">
                   Climate-adjusted debt sustainability analysis, scenario modeling, and fiscal space calculations using
-                  IMF/World Bank frameworks with live data.
+                  live data from the World Bank Open Data API, alongside published figures from the IMF, Paris Club, and
+                  other authoritative sources.
                 </p>
               </div>
 

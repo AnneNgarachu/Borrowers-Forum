@@ -75,7 +75,7 @@ export function AIChat() {
 
       {/* Chat panel */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 z-50 w-[400px] max-w-[calc(100vw-2rem)] h-[560px] max-h-[calc(100vh-3rem)] flex flex-col rounded-2xl shadow-2xl shadow-[#1e3a5f]/20 border border-[#1e3a5f]/15 bg-white overflow-hidden">
+        <div className="fixed bottom-6 right-6 z-50 w-100 max-w-[calc(100vw-2rem)] h-140 max-h-[calc(100vh-3rem)] flex flex-col rounded-2xl shadow-2xl shadow-[#1e3a5f]/20 border border-[#1e3a5f]/15 bg-white overflow-hidden">
           {/* Header */}
           <div className="gradient-navy px-5 py-4 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-3">
@@ -181,7 +181,7 @@ export function AIChat() {
               </Button>
             </div>
             <p className="text-[10px] text-slate-400 mt-2 text-center">
-              AI-powered by Claude &middot; Based on verified IMF, World Bank &amp; Paris Club data
+              AI-powered by Claude &middot; Grounded in World Bank data and verified precedent records sourced from the IMF, Paris Club, and other public institutions
             </p>
           </div>
         </div>

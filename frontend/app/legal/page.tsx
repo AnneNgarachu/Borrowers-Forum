@@ -139,7 +139,9 @@ export default function LegalPage() {
             <p className="text-sm text-slate-500 mt-4">
               Precedent data covers historical restructuring cases from 2017 to 2023, compiled from publicly available
               IMF, Paris Club, and World Bank sources. Live economic indicators are retrieved in real time from the
-              World Bank API. We encourage users to consult primary sources for the most current information.
+              World Bank Open Data API. IMF data integration is planned for a future release. Some country figures are
+              based on published 2023 estimates rather than live data. We encourage users to consult primary sources for
+              the most current information.
             </p>
           </CardContent>
         </Card>

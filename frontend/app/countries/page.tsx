@@ -158,7 +158,7 @@ export default function CountriesPage() {
           <CardContent className="pt-6">
             <div className="flex flex-wrap gap-3 items-center">
               <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                <SelectTrigger className="w-[200px]">
+                <SelectTrigger className="w-50">
                   <SelectValue placeholder="All Countries" />
                 </SelectTrigger>
                 <SelectContent>
@@ -183,7 +183,7 @@ export default function CountriesPage() {
               </Select>
 
               <Select value={selectedRegion} onValueChange={setSelectedRegion}>
-                <SelectTrigger className="w-[220px]">
+                <SelectTrigger className="w-55">
                   <SelectValue placeholder="All Regions" />
                 </SelectTrigger>
                 <SelectContent>
@@ -197,7 +197,7 @@ export default function CountriesPage() {
               </Select>
 
               <Select value={selectedIncomeLevel} onValueChange={setSelectedIncomeLevel}>
-                <SelectTrigger className="w-[200px]">
+                <SelectTrigger className="w-50">
                   <SelectValue placeholder="All Income Levels" />
                 </SelectTrigger>
                 <SelectContent>
@@ -249,11 +249,7 @@ export default function CountriesPage() {
             icon={Users}
             title="No countries found"
             description="No countries match your selected filters. Try adjusting your selection."
-            action={
-              <Button onClick={clearFilters} variant="outline">
-                Clear Filters
-              </Button>
-            }
+            action={{ label: "Clear Filters", onClick: clearFilters }}
           />
         ) : (
           <>
@@ -389,7 +385,7 @@ export default function CountriesPage() {
                                   <li>• GDP: World Bank World Development Indicators</li>
                                   <li>• Population: UN Population Division</li>
                                   <li>• Climate: ND-GAIN Country Index</li>
-                                  <li>• Debt: IMF World Economic Outlook</li>
+                                  <li>• Debt: published 2023 estimates</li>
                                 </ul>
                               </TooltipContent>
                             </Tooltip>

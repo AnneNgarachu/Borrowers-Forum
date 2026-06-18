@@ -78,7 +78,7 @@ export function Footer() {
           </div>
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-sm text-muted-foreground">
             <div className="flex flex-col sm:flex-row items-center gap-2">
-              <p>&copy; {new Date().getFullYear()} Anne Wanjiru Ngarachu / SAGE Platform LLC</p>
+              <p>&copy; {new Date().getFullYear()} Anne Wanjiru Ngarachu / SAGE Platform, Inc.</p>
               <span className="hidden sm:inline text-slate-400">&bull;</span>
               <p className="text-slate-500">Open Source Project</p>
             </div>

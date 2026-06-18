@@ -27,7 +27,8 @@ export default function HomePage() {
           </h1>
           <p className="text-xl text-slate-600 text-balance max-w-3xl mx-auto">
             Verified precedents, economic analysis, and research tools supporting sustainable debt solutions. Built on
-            data from IMF, World Bank, and Paris Club sources.
+            live data from the World Bank Open Data API, alongside published figures from the IMF, Paris Club, and other
+            authoritative sources.
           </p>
           <div className="flex flex-wrap gap-4 justify-center pt-4">
             <Link href="/countries">

@@ -1,5 +1,5 @@
 # Borrower's Forum Platform
-# Copyright (c) 2025-2026 Anne Wanjiru Ngarachu / SAGE Platform LLC
+# Copyright (c) 2025-2026 Anne Wanjiru Ngarachu / SAGE Platform, Inc.
 # Licensed under MIT License
 
 fastapi==0.104.1

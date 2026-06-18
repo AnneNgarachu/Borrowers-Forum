@@ -169,7 +169,7 @@ Local Python version must match production. Python 3.13 is incompatible with Pyd
 
 **Files Created:**
 ```
-src/services/external_data.py   - World Bank & IMF API clients
+src/services/external_data.py   - World Bank API client (live); IMF SDMX client (scaffolded, not yet wired)
 src/api/routers/live_data.py    - Live data endpoints
 ```
 
